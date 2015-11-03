@@ -1,3 +1,5 @@
 ## Ideas
 ## Daniel Wälchli
 ## 3.November
+
+-try binomial trees
