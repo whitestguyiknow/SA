@@ -1,2 +1,8 @@
 #1.Introduction
-
+A standard European basket-spread option is a financial derivative, whose
+underlying is a weighted sum of different assets and whose pay-off at
+maturity is given by the difference (the so called spread) between two 
+baskets of aggregated underlying asset prices. It's pay-off is given by 
+following formula: 
+P(S,T) = max(Sum wi*Si(T) - Sum wj*Sj(T) - K, 0)
+eight and K is it's strike price. 
