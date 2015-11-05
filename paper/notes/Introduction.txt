@@ -2,7 +2,16 @@
 A standard European basket-spread option is a financial derivative, whose
 underlying is a weighted sum of different assets and whose pay-off at
 maturity is given by the difference (the so called spread) between two 
-baskets of aggregated underlying asset prices. It's pay-off is given by 
-following formula: 
+baskets of aggregated underlying asset prices. In mathematical terms it's pay-off is given by 
+the formula: 
 P(S,T) = max(Sum wi*Si(T) - Sum wj*Sj(T) - K, 0)
-eight and K is it's strike price. 
+where Si is the ith underlying asset price, wi the weight and K is the strike price.
+Basket-spread options play an important role in hedging a portfolio of correlated long and short
+positions in the underlying assets. Especially they are very common in commodity markets,
+as producers are exposed to risks arising from spreads between feedstock and end product.
+Basket-spread options are traded over-the-counter and on exchanges. Because there is no
+closed-form solution for the fair price available it is inescapable to have an accurate and
+fast approximation method at hand to price basket-spread options. The multi-dimensionality and
+hence the lack of a marginal distribution for the basket-spread makes it impossible to give an exact
+analytical representation for the price (even in the simplest and most famous Black-Scholes setting
+which states that asset prices are driven by geometric Brownian motions).
