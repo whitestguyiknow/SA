@@ -15,9 +15,9 @@ hence the lack of a marginal distribution for the basket-spread makes it impossi
 analytical representation for the price (even in the simplest and most famous Black-Scholes setting
 where the asset price is driven by a geometric Brownian motion).
 In this paper I closely look at two different basket-spread option pricing methods which have been 
-introduced by G.Deelstra, A.Petkovic and M.Vanmaele [1] and by S.Deng, M.Li, and J.Zhou [2]. According to the authors both the second-order
-boundary approximation method [1,Chap.III/B,prop.5] and the improved comonotonic upper bound method (ICUB)
-[2,Chap.2,Prop.2] are considered to be extremely fast and accurate. Therefore I implement both methods in MATLAB
+introduced by S.Deng, M.Li, and J.Zhou [1] and by G.Deelstra, A.Petkovic and M.Vanmaele [2]. According to the authors both the second-order
+boundary approximation method [1,Chap.3,Prop.5] and the hybrid moment matching method associated to the improved comonotonic upper bound (ICUB)
+[2,Chap.3,Prop.5] are considered to be extremely fast and accurate. Therefore I implement both methods in MATLAB
 and compare their numerical performances as a function of the basket spread characteristics. 
 Nothe that The ICUB method also includes approximations for a pay-off of Asian type but to do
 a consistent comparison I focus on a pay-off of European type as stated above (*1). As a comparison 
