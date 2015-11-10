@@ -3,3 +3,5 @@
 ## 3.November
 
 -try binomial trees
+-menton second order approx works also for log Orenstein Uhlenbeck process, not only GBM
+
