@@ -38,29 +38,29 @@ switch method
         u = log(S0)+r*T;
         % Approximate H0(T)
         vH0 = sqrt(sigma(I)*rho(I)*sigma(I)')/N;
-        uH0 = log(sum(exp(u(I)+0.5*S0(I).^2)))-0.5*vH0^2;
-        sigma_10 = sum(rho(:,I).*sigma(I),1)/(N*vH0);
-        sigma_11 = rho(I,I);
+        uH0 = log(sum(exp(u(I)+0.5*sigma(I).^2)))-0.5*vH0^2;
+        sigma_10 = sum(rho(:,~I).*repmat(sigma(~I),M,1),1)/(N*vH0);
+        sigma_11 = rho(~I,~I);
         
-        sigma_11_inv = 1\sigma_ll;
+        sigma_11_inv = sigma_11\eye(M-N);
         sigma_11_sqrt = sqrt(sigma_11);
         
         % Proposition 1
-        sigma_xy = 1-sigma_l0'*sigma_11_inv*sigma_l0;
-        sigm_xy_sqrt = sqrt(sigma_xy); % or choletsky decomposition???
+        sigma_xy = 1-sigma_10*sigma_11_inv*sigma_10';
+        sigma_xy_sqrt = sqrt(sigma_xy); % or choletsky decomposition???
         
         % Proposition 3
         R = sum(exp(u));
-        c = -log(R+K)-uH0/(vH0*sigm_xy_sqrt);                                                   % (13)
-        d = 1/sigm_xy_sqrt*(sigma_11_inv*sigma_10-exp(u).*sigma/(uH0*(R+K)));                   % (14)
-        E = -0.5/sigm_xy_sqrt*(sigma'*sigma*exp(repmat(u,1,N)+repmat(u,2,N))/(vH0*(R+K)^2)...
-            +repmat(sigma.^2.*exp(u)/(vH0*(R+K)),1,N));                                         % (15)
+        c = -log(R+K)-uH0/(vH0*sigma_xy_sqrt);                                                   % (13)
+        d = 1/sigma_xy_sqrt*(sigma_11_inv*sigma_10-exp(u).*sigma/(uH0*(R+K)));                   % (14)
+        E = -0.5/sigma_xy_sqrt*(sigma'*sigma*exp(repmat(u',1,M)+repmat(u,M,1))/(vH0*(R+K)^2)...
+            +repmat(sigma.^2.*exp(u)/(vH0*(R+K)),M,1));                                         % (15)
         
         % proposition 4
         F =  sigma_11_sqrt*E*sigma_11_sqrt;                                             % (29)
         d_N1 =  sigma_11_sqrt*d;                                                        % (28)
         c_N1 = c+trace(F);                                                              % (27)
-        c0 = c+trace(F)+vH0*sigm_xy_sqrt+vH0*sigma_10'*d+vH0^2*sigma_10'*E*sigma_10;    % (23)
+        c0 = c+trace(F)+vH0*sigma_xy_sqrt+vH0*sigma_10'*d+vH0^2*sigma_10'*E*sigma_10;    % (23)
         d0 =  sigma_11_sqrt*(d+2*vH0*E*sigma_10);                                       % (24)
         
         V=0;
@@ -101,7 +101,7 @@ switch method
             end
             
             v(i) = max(sum((S(:,end)'.*e.*a))-K,0);
-            
+            fprintf('%d standard error\n',std(v))
             
         end
         
@@ -110,11 +110,15 @@ switch method
         
 end
 
-fprintf('%d standard error\n',std(v))
+
 V = exp(-r*T)*mean(v);
 end
 
-function [J0] = scaler1(u,v)
+function [J0] = scaler0(u,v)
+    J0 = normpdf(u/sqrt(1+v'*v));
+end
+
+function [J1] = scaler1(u,v)
     J0 = normpdf(u/sqrt(1+v'*v));
 end
 
