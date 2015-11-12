@@ -34,37 +34,54 @@ switch method
         
         I = (e==1);
         N = sum(I);
+        
         S0 = S0.*a;
-        u = log(S0)+r*T;
+        u0 = log(S0(I))+(r-0.5*sigma(I).^2)*T;                              % (5)
+        uk = log(S0(~I))+(r-0.5*sigma(~I).^2)*T;                            % (5)
+        v0 = sigma(I)*sqrt(T);
+        vk = sigma(~I)*sqrt(T);                                             % (5)
+        
         % Approximate H0(T)
-        vH0 = sqrt(sigma(I)*rho(I)*sigma(I)')/N;
-        uH0 = log(sum(exp(u(I)+0.5*sigma(I).^2)))-0.5*vH0^2;
-        sigma_10 = sum(rho(:,~I).*repmat(sigma(~I),M,1),1)/(N*vH0);
+        vH0 = sqrt(v0*rho(I)*v0')/N;
+        uH0 = log(sum(exp(u0+0.5*v0.^2)))-0.5*vH0^2;
+        
+        sigma_10 = sum(rho(~I,I).*repmat(v0,M-N,1),2)/(N*vH0);
         sigma_11 = rho(~I,~I);
         
-        sigma_11_inv = sigma_11\eye(M-N);
-        sigma_11_sqrt = sqrt(sigma_11);
+        sigma_11_inv  = sigma_11\eye(M-N);
+        sigma_11_sqrt = sqrt(sigma_11); %or choletsky decomposition?????
         
         % Proposition 1
-        sigma_xy = 1-sigma_10*sigma_11_inv*sigma_10';
-        sigma_xy_sqrt = sqrt(sigma_xy); % or choletsky decomposition???
+        sigma_xy = 1-sigma_10'*sigma_11_inv*sigma_10;
+        sigma_xy_sqrt = sqrt(sigma_xy);
         
         % Proposition 3
-        R = sum(exp(u));
-        c = -log(R+K)-uH0/(vH0*sigma_xy_sqrt);                                                   % (13)
-        d = 1/sigma_xy_sqrt*(sigma_11_inv*sigma_10-exp(u).*sigma/(uH0*(R+K)));                   % (14)
-        E = -0.5/sigma_xy_sqrt*(sigma'*sigma*exp(repmat(u',1,M)+repmat(u,M,1))/(vH0*(R+K)^2)...
-            +repmat(sigma.^2.*exp(u)/(vH0*(R+K)),M,1));                                         % (15)
+        R   = sum(exp(uk));
+        dx  = exp(uk').*vk'/(vH0*(R+K));
+        d2x = (vk'*vk*exp(repmat(uk',1,M-N)+repmat(uk,M-N,1))/(vH0*(R+K)^2)...
+                +repmat(vk.^2.*exp(uk)/(vH0*(R+K)),M-N,1));  
+        c   = -(log(R+K)-uH0)/(vH0*sigma_xy_sqrt);                          % (13)
+        d   = 1/sigma_xy_sqrt*(sigma_11_inv*sigma_10-dx);                   % (14)
+        E   = -0.5/sigma_xy_sqrt*d2x;                                       % (15)
         
         % proposition 4
-        F =  sigma_11_sqrt*E*sigma_11_sqrt;                                             % (29)
+        F    =  sigma_11_sqrt*E*sigma_11_sqrt;                                          % (29)
         d_N1 =  sigma_11_sqrt*d;                                                        % (28)
         c_N1 = c+trace(F);                                                              % (27)
-        c0 = c+trace(F)+vH0*sigma_xy_sqrt+vH0*sigma_10'*d+vH0^2*sigma_10'*E*sigma_10;    % (23)
-        d0 =  sigma_11_sqrt*(d+2*vH0*E*sigma_10);                                       % (24)
+        c0   = c+trace(F)+vH0*sigma_xy_sqrt+vH0*sigma_10'*d+vH0^2*sigma_10'*E*sigma_10; % (23)
+        d0   =  sigma_11_sqrt*(d+2*vH0*E*sigma_10);                                     % (24)
+        ck   = c+trace(F)+vk'.*(sigma_11*d)+vk'.^2.*diag(sigma_11*E*sigma_11);          % (25)
+        dk   = sigma_11_sqrt*(repmat(d,1,M-N)+2*repmat(vk,M-N,1).*(E*sigma_11));        % (26) Matrix with dks in columns
         
-        V=0;
-        
+%         % Proposition 5
+%         theta = @(v) (sqrt(1+v'*v)-1)/(v'*v*sqrt(1+v'*v));
+%         psi   = @(v) 1/(1+v'*v);
+%         
+%         p = psi(d0);
+%         V = exp(-r*T+uH0+0.5*vH0^2)*(normcdf(c0*sqrt(p)))+...
+%             p^1.5*(p*c0^2-1)*d0'*F*d0*normpdf(c0*p)+...
+%             c0*p^1.5*normpdf(c0*sqrt(p))*(2*trace(F^2)-4*(1-trace(F))
+            
         
     case 'HybMMICUB'
         disp('Price basked-spread option with hybrid moment matching method with ICUB');
@@ -114,11 +131,6 @@ end
 V = exp(-r*T)*mean(v);
 end
 
-function [J0] = scaler0(u,v)
-    J0 = normpdf(u/sqrt(1+v'*v));
+function [I] = I(c,d)
+    I = 
 end
-
-function [J1] = scaler1(u,v)
-    J0 = normpdf(u/sqrt(1+v'*v));
-end
-
