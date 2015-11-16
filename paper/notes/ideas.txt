@@ -3,5 +3,5 @@
 ## 3.November
 
 -try binomial trees
--menton second order approx works also for log Orenstein Uhlenbeck process, not only GBM
-
+-mention second order approx works also for log Orenstein Uhlenbeck process, not only GBM
+-plot the equation in (15) to show regularity of function which has to be solved

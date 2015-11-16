@@ -40,7 +40,7 @@ v0 = sigma(I)*sqrt(T);
 vk = sigma(~I)*sqrt(T);                                             % (5)
 
 % Approximate H0(T)
-vH0 = sqrt(v0*rho(I)*v0')/M;
+vH0 = sqrt(v0*rho(I,I)*v0')/M;
 uH0 = log(sum(exp(u0+0.5*v0.^2)))-0.5*vH0^2;
 %uH0 = log(sum(S0(I)))+r*T+0.5*sum(v0.^2)/M;
 

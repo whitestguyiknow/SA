@@ -29,8 +29,46 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 %% Computation
 disp('Price basked-spread option with second order boundary approximation');
 
+I = (e==1);
+M = sum(I);
 
+S0 = S0.*a;
+F0 = S0*exp(r*T);
 
+% Hybrid moment matching
+m11 = sum(F0(I));
+m21 = sum(sum(F0(I)'*F0(I).*exp(rho(I,I).*(sigma(I)'*sigma(I))*T)));
+
+u1 = 2*log(m11)-0.5*log(m21);
+var1 = log(m21)-2*log(m11);
+
+m12 = sum(F0(~I));
+m22 = sum(sum(F0(~I)'*F0(~I).*exp(rho(~I,~I).*(sigma(~I)'*sigma(~I))*T)));
+
+u2 = 2*log(m12)-0.5*log(m22);
+var2 = log(m22)-2*log(m12);
+
+crm = sum(sum(F0(I)'*F0(~I).*exp(0.5*T*(2*rho(I,~I).*(sigma(I)'*sigma(~I)))))); %repmat(sigma(I).^2',1,sum(~I))+repmat(sigma(~I).^2,sum(I),1)
+p = (log(crm)-u1-u2-0.5*var1-0.5*var2)/sqrt(var1*var2);
+
+% Proposition 5
+gamma1 = (exp(u1)*sqrt(var1)+exp(u2)*sqrt(var2)*p)/(exp(2*u1)*var1+exp(2*u2)*var2+2*exp(u1+u2)*sqrt(var1)*sqrt(var2));
+gamma2 = exp(u1)*sqrt(var1)*p+exp(u2)*sqrt(var2);
+Y1 = sqrt(var1)*sqrt(1-gamma1^2);
+Y2 = sqrt(var2)*sqrt(1-gamma2^2);
+A1 = @(u) gamma1*sqrt(var1)*norminv(u,0,1);
+A2 = @(u) gamma2*sqrt(var2)*norminv(u,0,1);
+fun = @(x,u) exp(u1+A1(u)+Y1*x)+exp(u2+A2(u)+Y2*x)-K;
+x=linspace(0,1,100)
+subplot(2,2,1)
+plot(x,fun(x,0.2))
+subplot(2,2,2)
+plot(x,fun(x,0.5))
+subplot(2,2,3)
+plot(x,fun(x,0.7))
+subplot(2,2,4)
+plot(x,fun(x,0.9))
+V=0
 end
 
 

@@ -19,6 +19,7 @@ sigma = [0.3 0.3 0.3];
 rho = [1 0.2 0.8; 0.2 1 0.4; 0.8 0.4 1];
 
 V_sb = priceBasketSpreadOption_SecondOrderBoundaryApprox(K,r,T,e,a,S0,sigma,rho)
+V_HybMMICUB = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho)
 V_mc = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,1e4,3e3);
 
 
