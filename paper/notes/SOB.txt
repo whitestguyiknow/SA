@@ -1,28 +1,36 @@
 #2. Second-Order Boundary Method
 The second-order boudary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1].
-Beside the SOB method Deng, Li and Zhou also introduce the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing 
-for spread options involving only two underlyings. in [1] Deng, Li and Zhou compare their two methods with a remarkable work from Carmona and Durrleman (2005) [4] 
-which also approximates the multi-asset spread option price. A study* of the results shows that the SOB method is the most accurate and also the fastest. 
-The computational edge of the SOB method lies in its closed form which only involves arithmetic calculations.
+Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing 
+for spread options involving only two underlyings. In [1] Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) [4] 
+which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. 
+The computational edge of the SOB method lies in its closed form solution which only involves arithmetic calculations.
 #2.1 Model Setup
+This section presents the SOB method introduced by Deng, Li and Zhou [1, Chap.2,3].
 Consider M+N asssets S1(t),S2(t),..., and SM+N(t) whichs price process follows a GBM
-dS(t) = u*S(t)dt + sigma*S(t)dW(t).
+dS_i(t) = u*S_i(t)dt + sigma_i*S_i(t)dW(t).
 The payoff of the hybrid European basket-spread at time T is 
 max(sum_i=1^M wi*Si(T) - sum_j=M+1^M+N wj*Sj(T) - K,0),
 where wi is the weight and K the strike price. We assume that conditioning on the initial asset prices Si(0), log(Si(T)) are jointly normally distributed with mean mu_i, variance v_i^2
 and correlation matrix rho_i,j for i,j = 1,2,...,M+N. Further we assume that the interest rate r is a constant and that the price of the hybrid European basket-spread option is given by
 V = exp(-r*T)E^Q[max(sum_i=1^M wi*Si(T) - sum_j=M+1^M+N wj*Sj(T) - K,0)],
-where Q is the risk-neutral measure under which discounted security prices are martingales. The means and variances are defined as 
-mu_i = E^Q[logS_k(T)] and v_i^2 = Var^Q[log(S_k(T))], i=1,2,...,M+N.
-As the weights w_i can be incorporated in the asset price by taking Si'=w_i*Si and u_i=log(w_i)+u_i, vi'=vi and rho_i,j'=rho_i,j,
-we will assume that all weights wi equal 1 w.l.o.g.
-Next we define the variables H_0(t)=sum_i=1^M S_t(t) and H_k(t)=S_k+M(t), k=1,2,...,N and express the final payoff of the hybrid option with following equation:
-max(H_0(T)-sum_k=1^NH_k(T)-K,0).
-This is a crucial step for the pricing of hybrid basked-spread options. Notice that the log(H_i)'s are no longer jointly normally distributed nor is log(H_0(T)) 
-normally distributed. Now the distribution of H_0(T) is being approximated by the geometric averages of the S_i's.
+where Q is the risk-neutral measure under which discounted security prices are martingales. In the GBM setting the means and variances are defined by 
+mu_i = E^Q[logS_k(T)] = log(s_i) + (r-1/2sigma_k^2)*T and v_i^2 = Var^Q[log(S_k(T))] = sigma_k*sqrt(T), i=1,2,...,M+N.
+Because the weights w_i can be incorporated in the asset price by taking Si'=w_i*Si and u_i=log(w_i)+u_i, vi'=vi and rho_i,j'=rho_i,j,
+we will assume that all weights wi equal 1 without loss of generality.
+The SOD method approximates the price of a spread option with payoff [S_0(T) - sum_j=1^N Sj(T) - K,0)], thus we introduce the random variables H_0(t)=sum_i=1^M S_t(t) and H_k(t)=S_k+M(t), k=1,2,...,N 
+which can be plugged into preceding payoff formula. The idead is to approximate the distribution of H_0(T) by the geometric averages of the corresponding  S_i's, which	 is a crucial step in the extension of the SOD method for hybrid basked-spread options. Notice that log(H_0(T)) is not normally distributed nor are the log(H_i)'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed. 
+The mean and the variance of the newly introduced random variable H_0(T) is given by
+mu_0^H = log(sum_i=0^M exp(mu_i+1/2v_i²)) - 1/2(v_0^H)^2 and v_0^H=1/Msqrt(sum sum rho_i,j v_i v_j)
+Next we define random variables X and Y_k by
+X = (log(H_0(T))-mu_0^H)/v_0^H and Y_k = (log(H_k(T)-mu_k^H)/v_k^H, k=1,2,...,N
+wherease u_k^H = u_k+M and v_k^H = v_k+M for k=1,2,...,N. Following that we can approximate the variables X and Y_k as jointly normally distributed with mean vector 0,
+variance vector 1 and correlation matrix Sigma = (q_i,j) for i,j=0,1,...,N, where 
+q_0,0=1
+q_0,k=q_k,0=1...
+q_i,j=rho_M+i,M+j
+We can rewrite the correlation matrix Sigma as a composition of a Nx1 vector Sigma_10 and Sigma_11 the NxN correlation matrix of the Y_k's:
+Sigma = (q_i,j) = (1 Sigma_10'; Sigma_10 Sigma11)
 
 
 
-[3] Deng, S. J, M. Li, and J. Zhou. “Closed-form approximations for spread option prices and Greeks.” available at SSRN:http://ssrn.com/abstract=952747, (2006).
-[4] Carmona, R., and V. Durrleman. “Generalizing the Black-Scholes formula to multivariate contigent claims.” Journal of Computational Finance, 9 (2005), 42-63.
 *see Matlab Script

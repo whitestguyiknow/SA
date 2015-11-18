@@ -1,0 +1,4 @@
+[1] S.J. Deng, M. Li, J. Zhou. "Multi-asset Spread Option Pricing and Hedging" (2007)
+[2] G. Deelstra, A. Petkovic, M. Vanmaele. "Pricing and hedging Asian basket spread options" (2009)
+[3] S.J. Deng, M. Li, and J. Zhou. “Closed-form approximations for spread option prices and Greeks.” available at SSRN:http://ssrn.com/abstract=952747, (2006).
+[4] Carmona, R., and V. Durrleman. “Generalizing the Black-Scholes formula to multivariate contigent claims.” Journal of Computational Finance, 9 (2005), 42-63.
