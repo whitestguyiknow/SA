@@ -4,4 +4,7 @@
 
 -try binomial trees
 -mention second order approx works also for log Orenstein Uhlenbeck process, not only GBM
--plot the equation in (15) to show regularity of function which has to be solved-plot convergence and integrands from HybMMICUB
+-plot the equation in (15) to show regularity of function which has to be solve
+-plot convergence and integrands from HybMMICUB
+-check dates of references
+-look through introduction of SOB method, state in my introduction earlier work

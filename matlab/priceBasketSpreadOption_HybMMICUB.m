@@ -1,7 +1,6 @@
-function [V] = priceBasketSpreadOption_HybMMICUB(K, r, T, e, a, S0, sigma, rho)
+function [V] = priceBasketSpreadOption_HybMMICUB(K, r, T, e, a, S0, sigma, rho, eps)
 %% Pricing Function for Basket-Spread options using Hybrid Moment Matching associated with ICUB
 %% Based on Pricing and hedging Asian basket spread options (G.Deelstra, A.Petkovic, M.Vanmaele; 2010)
-
 % Author: Daniel Wälchli
 % November 2015
 
@@ -14,7 +13,7 @@ function [V] = priceBasketSpreadOption_HybMMICUB(K, r, T, e, a, S0, sigma, rho)
 % S0:           initial value of asset
 % sigma:        volatility
 % rho:          correlation
-% nIntervall:   number of intervalls used in numerical integration
+% eps:          max error on intervall in Adaprive Simpson's Integration
 
 %% Assertion
 N = length(e);
@@ -61,13 +60,13 @@ A1 = @(u) gamma1*sqrt(var1)*norminv(u,0,1);
 A2 = @(u) gamma2*sqrt(var2)*norminv(u,0,1);
 
 fsic = @(x) fsicu(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
-FSICK = adaptive_simpson_rule(fsic,0.001,0.999,1e-8,simpsons_rule(fsic,0.00001,0.99999),1);
+FSICK = adaptive_simpson_rule(fsic,0.001,0.999,eps,simpsons_rule(fsic,0.00001,0.99999),1);
 
 ifsic_1 = @(x) integrandFsicu_1(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 ifsic_2 = @(x) integrandFsicu_2(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 dx=1e-7;
-I1 = adaptive_simpson_rule(ifsic_1,dx,1-dx,1e-8,simpsons_rule(ifsic_1,dx,1-dx),1);
-I2 = adaptive_simpson_rule(ifsic_2,dx,1-dx,1e-8,simpsons_rule(ifsic_2,dx,1-dx),1);
+I1 = adaptive_simpson_rule(ifsic_1,dx,1-dx,eps,simpsons_rule(ifsic_1,dx,1-dx),1);
+I2 = adaptive_simpson_rule(ifsic_2,dx,1-dx,eps,simpsons_rule(ifsic_2,dx,1-dx),1);
 
 V=I1-I2-K*(1-FSICK);
 end
@@ -116,7 +115,7 @@ function [I] = adaptive_simpson_rule(f,a,b,eps,base,N)
     l = simpsons_rule(f,a,c);
     r = simpsons_rule(f,c,b);
     if (abs(l + r - base) <= 15*eps)
-        I = l + r + (l + r - base)/15.0;
+        I = [l + r + (l + r - base)/15.0, N];
     else
         I = adaptive_simpson_rule(f,a,c,eps/2.0,l,N+1) + adaptive_simpson_rule(f,c,b,eps/2.0,r,N+1);
     end

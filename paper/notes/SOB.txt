@@ -1,0 +1,20 @@
+#2. Second-Order Boundary Method
+The second-order boudary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1].
+Beside the SOB method Deng, Li and Zhou also introduce the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing 
+for spread options involving only two underlyings. in [1] Deng, Li and Zhou compare their two methods with a remarkable work from Carmona and Durrleman (2005) [4] 
+which also approximates the multi-asset spread option price. A study* of the results shows that the SOB method is the most accurate and also the fastest. 
+The computational edge of the SOB method lies in its closed form which only involves arithmetic calculations.
+#2.1 Model Setup
+Consider M+N asssets S1(t),S2(t),..., and SM+N(t) whichs price process follows a GBM
+dS(t) = u*S(t)dt + sigma*S(t)dW(t).
+The payoff of the hybrid European basket-spread at time T is 
+max(sum_i=1^M wi*Si(T) - sum_j=M+1^M+N wj*Sj(T) - K,0),
+where wi is the weight and K the strike price. We assume that conditioning on the initial asset prices Si(0), log(Si(T)) are jointly normally distributed with mean mu_i, variance v_i^2
+and correlation matrix rho_i,j for i,j = 1,2..M+N. As the weights w_i can be incorporated in the asset price by taking Si'=w_i*Si and u_i=log(w_i)+u_i, vi'=vi and rho_i,j'=rho_i,j,
+we will assume that all weights wi equal 1 w.l.o.g. Further we assume that the interest rate r is a constant and that the price of the hybrid European basket-spread option is given by
+V = exp(-r*T)E^Q[max(sum_i=1^M wi*Si(T) - sum_j=M+1^M+N wj*Sj(T) - K,0)],
+where Q is the risk-neutral measure under which discounted security prices are martingales. 
+
+[3] Deng, S. J, M. Li, and J. Zhou. “Closed-form approximations for spread option prices and Greeks.” available at SSRN:http://ssrn.com/abstract=952747, (2006).
+[4] Carmona, R., and V. Durrleman. “Generalizing the Black-Scholes formula to multivariate contigent claims.” Journal of Computational Finance, 9 (2005), 42-63.
+*see Matlab Script
