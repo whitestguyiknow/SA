@@ -2,7 +2,7 @@
 % Author: Daniel Wälchli
 % November 2015
 
-clear all;
+%clear all;
 
 seed = 133781;
 rng(seed);
@@ -20,8 +20,8 @@ sigma = [0.3 0.3 0.3];
 rho = [1 0.2 0.8; 0.2 1 0.4; 0.8 0.4 1];
 
 V_sb1 = priceBasketSpreadOption_SecondOrderBoundaryApprox(K,r,T,e,a,S0,sigma,rho)
-V_HybMMICUB1 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-5)
-V_mc1 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,1e5,3.3e2)
+V_HybMMICUB1 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-6)
+V_mc1 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,1e7,3.3e3)
 
 
 %% Numerical Experiments from Pricing and Hedging Asian Basket Spread Options
@@ -35,6 +35,6 @@ sigma = [0.4 0.22 0.3];
 rho = [1 0.17 0.91; 0.17 1 0.41; 0.91 0.41 1];
 V_sb2 = priceBasketSpreadOption_SecondOrderBoundaryApprox(K,r,T,e,a,S0,sigma,rho)
 V_HybMMICUB2 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-5)
-V_mc2 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,1e5,3.3e2)
+V_mc2 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,1e7,3.3e3)
 
 

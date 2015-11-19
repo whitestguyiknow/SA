@@ -17,6 +17,7 @@ where Q is the risk-neutral measure under which discounted security prices are m
 mu_i = E^Q[logS_k(T)] = log(s_i) + (r-1/2sigma_k^2)*T and v_i^2 = Var^Q[log(S_k(T))] = sigma_k*sqrt(T), i=1,2,...,M+N.
 Because the weights w_i can be incorporated in the asset price by taking Si'=w_i*Si and u_i=log(w_i)+u_i, vi'=vi and rho_i,j'=rho_i,j,
 we will assume that all weights wi equal 1 without loss of generality.
+Remark: The SOD method also allows a mean-reverting lor-Ornstein-Uhlenbeck setting, wherease applying the Ito-Lemma simply yields different definitions of mu_i, v_i and rho_i,j. 
 The SOD method approximates the price of a spread option with payoff [S_0(T) - sum_j=1^N Sj(T) - K,0)], thus we introduce the random variables H_0(t)=sum_i=1^M S_t(t) and H_k(t)=S_k+M(t), k=1,2,...,N 
 which can be plugged into preceding payoff formula. The idead is to approximate the distribution of H_0(T) by the geometric averages of the corresponding  S_i's, which	 is a crucial step in the extension of the SOD method for hybrid basked-spread options. Notice that log(H_0(T)) is not normally distributed nor are the log(H_i)'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed. 
 The mean and the variance of the newly introduced random variable H_0(T) is given by
@@ -28,8 +29,42 @@ variance vector 1 and correlation matrix Sigma = (q_i,j) for i,j=0,1,...,N, wher
 q_0,0=1
 q_0,k=q_k,0=1...
 q_i,j=rho_M+i,M+j
-We can rewrite the correlation matrix Sigma as a composition of a Nx1 vector Sigma_10 and Sigma_11 the NxN correlation matrix of the Y_k's:
-Sigma = (q_i,j) = (1 Sigma_10'; Sigma_10 Sigma11)
+Rewriting the correlation matrix Sigma as a composition of a Nx1 vector Sigma_10 and Sigma_11 the NxN correlation matrix of the Y_k's:
+Sigma = (q_i,j) = (1 Sigma_10'; Sigma_10 Sigma11) simplifies notation for later computations. 
+Before introducing the methods for valuing hybrid basket-spread option a short analysis of the exercise boundary is necessary. At time T, the hybrid basket-spread option is in-the-money 
+if H_0(T) - sum_k=1^N Sk(T)-K>0. If K>0, rewriting this inequality in terms of the random variable X gives
+X>log(sumexp(v_kY_k-mu_k+K)-mu_0^H)/v_0^H
+Conditioned on  Y_k=y_k, the option is in-the-money if X>x(y), where
+x(y)==log(sumexp(v_ky_k-mu_k+K)-mu_0^H)/v_0^H.
+Note that the exercise boundary x(y) is a nonlinear function in the components of y but close to being linear around y=0.
+The analytical computation of the expectation value (?) in integral form is shown below:
+V(mu,v,Sigma) = exp(-rT) integral integral ... dx dy
+wherease phi(z;m;Sigma) stands for the multivariate normal density function with mean vector m and covariance matrix Sigma. Note that the random variables X and Y in equation are approximately jointly normally distributed with density phi({x,y};0;Sigma)
+Proposition 1 (Pearson (1995) [5]) allos us to reduce the (N+1)-dimensional integral from above to N+2 N-dimensional integrals.
+Proposition 1:
+...
+...(name meaning of cdf)
+
+Recover that det(SIgma) /=/ 0 such that Sigma_x|y /=/0, det(Sigma_11) /=/ 0 and A(y) is always well defined. In the GBM setting, the price V to the form
+V = s_0exp(-q_0T)I_0-sum_k=1^Ns_kexp(-q_kT)I_k-Kexp(-rT)I_N+1.
+The proof of Proposition 1 can be found in [1] in the appendix. 
+The formula presented above is the starting point of our next approximation as we do a second order taylor expansion of the exercise boundary x(y) and the function A(y) such that the I_k's can be performed in closed form. Observe that A(y) is also close to being linear around y=0. Now I present the second order approximation of x(y) and A(y):
+Proposition 2(3):
+...
+...
+
+To gain a closed-form approximation of the option price (equation (?)) we need to further expand Phi(c+d'y+y'Ey) into three terms to second order in y'Ey around y'Ey=epsilon. The approximation formula of the price of a hybrid basket-spead is presented in Proposition 4, which has been derived with the help of an identity in Li (2004) [6]. 
+Proposition 3(4):
+...
+...
+
+The computation in proposition 3 appears to be cumbersome but most of the matrix multiplication can be avoided which is shown in proposition 4. The proofs of propositions 3(4) and 4(5) can be found in [1] in the appendix. 
+Proposition 4(5):
+...
+...
+
+The computational short-cut presented in proposition 5 reduces the four computationally costly terms in proposition 3, namely tr[(PFP)^2], v'P²FP²v, ||PFP²v||² and tr(PFP), to four much simpler expressions, tr(F), tr(F^2), v'Fv, and v'F^2v.
+
 
 
 

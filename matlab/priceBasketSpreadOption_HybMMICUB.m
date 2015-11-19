@@ -59,16 +59,20 @@ Y2 = -sqrt(var2)*sqrt(1-gamma2^2);
 A1 = @(u) gamma1*sqrt(var1)*norminv(u,0,1);
 A2 = @(u) gamma2*sqrt(var2)*norminv(u,0,1);
 
-fsic = @(x) fsicu(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
-FSICK = adaptive_simpson_rule(fsic,0.001,0.999,eps,simpsons_rule(fsic,0.00001,0.99999),1);
+dx=1e-7;
 
+fsic = @(x) fsicu(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
+[FSICKN] = adaptive_simpson_rule(fsic,dx,1-dx,eps,simpsons_rule(fsic,dx,1-dx),1);
+fprintf('Integration intervalls used in FSICK: %d\n',FSICKN(2))
 ifsic_1 = @(x) integrandFsicu_1(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 ifsic_2 = @(x) integrandFsicu_2(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
-dx=1e-7;
-I1 = adaptive_simpson_rule(ifsic_1,dx,1-dx,eps,simpsons_rule(ifsic_1,dx,1-dx),1);
-I2 = adaptive_simpson_rule(ifsic_2,dx,1-dx,eps,simpsons_rule(ifsic_2,dx,1-dx),1);
 
-V=I1-I2-K*(1-FSICK);
+[IN1] = adaptive_simpson_rule(ifsic_1,dx,1-dx,eps,simpsons_rule(ifsic_1,dx,1-dx),1);
+fprintf('Integration intervalls used in I1: %d\n',IN1(2))
+[IN2] = adaptive_simpson_rule(ifsic_2,dx,1-dx,eps,simpsons_rule(ifsic_2,dx,1-dx),1);
+fprintf('Integration intervalls used in I2: %d\n',IN2(2))
+
+V=IN1(1)-IN2(1)-K*(1-FSICKN(1));
 end
 
 function [F] = fsicu(u,u1,A1,Y1,u2,A2,Y2,K,x0)
@@ -110,13 +114,13 @@ function [I] = simpsons_rule(f,a,b)
     I = h*(f(a)+4.0*f(c)+f(b));
 end
 
-function [I] = adaptive_simpson_rule(f,a,b,eps,base,N)
+function [IN] = adaptive_simpson_rule(f,a,b,eps,base,N)
     c = (a+b)/2;
     l = simpsons_rule(f,a,c);
     r = simpsons_rule(f,c,b);
     if (abs(l + r - base) <= 15*eps)
-        I = [l + r + (l + r - base)/15.0, N];
+        IN = [l+r+(l+r-base)/15.0, N];
     else
-        I = adaptive_simpson_rule(f,a,c,eps/2.0,l,N+1) + adaptive_simpson_rule(f,c,b,eps/2.0,r,N+1);
+        IN = adaptive_simpson_rule(f,a,c,eps/2.0,l,N+1) + adaptive_simpson_rule(f,c,b,eps/2.0,r,N+1);
     end
 end

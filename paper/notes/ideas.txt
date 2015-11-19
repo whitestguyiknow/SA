@@ -1,7 +1,10 @@
 ## Ideas
 ## Daniel Wälchli
 ## 3.November
+## 19.Nov
 
+-use implementation techniques metnioned in [1] (Points 4&5)
+-plot A(y) and x(y) to show taht it is close to linear
 -try binomial trees
 -mention second order approx works also for log Orenstein Uhlenbeck process, not only GBM
 -plot the equation in (15) to show regularity of function which has to be solve

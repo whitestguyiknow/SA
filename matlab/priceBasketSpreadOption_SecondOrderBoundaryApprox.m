@@ -47,11 +47,13 @@ uH0 = log(sum(exp(u0+0.5*v0.^2)))-0.5*vH0^2;
 sigma_10 = sum(rho(~I,I).*repmat(v0,N-M,1),2)/(M*vH0);
 sigma_11 = rho(~I,~I);
 
-sigma_11_inv  = sigma_11\eye(N-M);
-sigma_11_sqrt = chol(sigma_11); %choletsky decomposition or sqrt?????
+sigma_11_inv_sigma_10 = sigma_11\sigma_10;
+[sigma_11_EV sigma_11_Eval] = eig(sigma_11); 
+sigma_11_sqrt = sigma_11_EV*sqrt(sigma_11_Eval)*sigma_11_EV; 
+%sigma_11_sqrt = chol(sigma_11); %or choletsky decomposition or sqrt????? 
 
 % Proposition 1
-sigma_xy = 1-sigma_10'*sigma_11_inv*sigma_10;
+sigma_xy = 1-sigma_10'*sigma_11_inv_sigma_10;
 sigma_xy_sqrt = sqrt(sigma_xy);
 
 % Proposition 3
@@ -60,7 +62,7 @@ dx  = exp(uk').*vk'/(vH0*(R+K));
 d2x = -vk'*vk*exp(repmat(uk',1,N-M)+repmat(uk,N-M,1))/(vH0*(R+K)^2)...
     +repmat(vk.^2.*exp(uk),N-M,1)/(vH0*(R+K));
 c   = -(log(R+K)-uH0)/(vH0*sigma_xy_sqrt);                          % (13)
-d   = 1/sigma_xy_sqrt*(sigma_11_inv*sigma_10-dx);                   % (14)
+d   = 1/sigma_xy_sqrt*(sigma_11_inv_sigma_10-dx);                   % (14)
 E   = -0.5/sigma_xy_sqrt*d2x;                                       % (15)
 
 % Proposition 4
@@ -72,13 +74,15 @@ d0   = sigma_11_sqrt*(d+2*vH0*E*sigma_10);                                      
 ck   = c+trace(F)+vk'.*(sigma_11*d)+vk'.^2.*diag(sigma_11*E*sigma_11);          % (25)
 dk   = sigma_11_sqrt*(repmat(d,1,N-M)+2*repmat(vk,N-M,1).*(E*sigma_11));        % (26) Matrix with dks in columns
 
+F2 = F*F;
+
 % Proposition 5
 fPsi   = @(v) 1/(1+v'*v);                                                                                   % (30)
 
 J0 = @(u,psi) normcdf(u*sqrt(psi));                                                                         % (35)
 J1 = @(u,v,psi) psi^1.5*(psi*u^2-1)*v'*F*v*normpdf(u*sqrt(psi));                                            % (36)
-J2 = @(u,v,psi) u*psi^1.5*normpdf(u*sqrt(psi))*(2*trace(F^2)-4*(1-trace(F))*(psi-psi^2)*v'*F*v+...
-    psi^2*(9+(2-3*u^2)*psi-u^2*(4-u^2)*psi^2)*(v'*F*v)^2-2*psi*(5+(1-2*u^2)*psi)*v'*F^2*v);                 % (37)
+J2 = @(u,v,psi) u*psi^1.5*normpdf(u*sqrt(psi))*(2*trace(F2)-4*(1-trace(F))*(psi-psi^2)*v'*F*v+...
+    psi^2*(9+(2-3*u^2)*psi-u^2*(4-u^2)*psi^2)*(v'*F*v)^2-2*psi*(5+(1-2*u^2)*psi)*v'*F2*v);                  % (37)
 
 % Proposition 4 (price)
 aI = @(u,v,psi) J0(u,psi)+J1(u,v,psi)-0.5*J2(u,v,psi);                                  % (17)
