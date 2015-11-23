@@ -2,7 +2,7 @@ function [V] = priceBasketSpreadOption_SecondOrderBoundaryApprox(K, r, T, e, a, 
 %% Pricing Function for Basket-Spread options using Second Order boundary Approximation
 %% Based on Multi-asset Spread Option Pricing and Hedging (S.Deng, M.Li, J. Zhou; 2007)
 
-% Author: Daniel Wälchli
+% Author: Daniel W??lchli
 % November 2015
 
 %% Parameters:
@@ -27,7 +27,6 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 
 
 %% Computation
-
 disp('Price basked-spread option with second order boundary approximation');
 
 I = (e==1);
@@ -48,7 +47,7 @@ sigma_10 = sum(rho(~I,I).*repmat(v0,N-M,1),2)/(M*vH0);
 sigma_11 = rho(~I,~I);
 
 sigma_11_inv_sigma_10 = sigma_11\sigma_10;
-[sigma_11_EV sigma_11_Eval] = eig(sigma_11); 
+[sigma_11_EV, sigma_11_Eval] = eig(sigma_11); 
 sigma_11_sqrt = sigma_11_EV*sqrt(sigma_11_Eval)*sigma_11_EV; 
 %sigma_11_sqrt = chol(sigma_11); %or choletsky decomposition or sqrt????? 
 

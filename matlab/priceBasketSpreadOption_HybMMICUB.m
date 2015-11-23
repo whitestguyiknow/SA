@@ -1,7 +1,7 @@
 function [V] = priceBasketSpreadOption_HybMMICUB(K, r, T, e, a, S0, sigma, rho, eps)
 %% Pricing Function for Basket-Spread options using Hybrid Moment Matching associated with ICUB
 %% Based on Pricing and hedging Asian basket spread options (G.Deelstra, A.Petkovic, M.Vanmaele; 2010)
-% Author: Daniel Wälchli
+% Author: Daniel W??lchli
 % November 2015
 
 %% Parameters:
@@ -76,45 +76,35 @@ V=IN1(1)-IN2(1)-K*(1-FSICKN(1));
 end
 
 function [F] = fsicu(u,u1,A1,Y1,u2,A2,Y2,K,x0)
+    % Find FSU(K)
     f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
     F = fzero(f,x0);
     F = normcdf(F);
 end
 
 function [I1] = integrandFsicu_1(u,u1,A1,Y1,u2,A2,Y2,K,x0)
+    % Integral in (15) for i=1
     f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
     F = fzero(f,x0);
     I1 = exp(u1+A1(u)+0.5*Y1^2)*normcdf(Y1-F);
 end
 
 function [I2] = integrandFsicu_2(u,u1,A1,Y1,u2,A2,Y2,K,x0)
+    % Integral in (15) for i=2
     f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
     F = fzero(f,x0);
     I2 = exp(u2+A2(u)+0.5*Y2^2)*normcdf(Y2-F);
 end
 
-function [I] = simpson(f,a,b,N)
-    % Numerical Integration with Simpson's Rule
-    if(mod(N,2))
-        N = N+1;
-    end
-    dx = (b-a)/(N-1);
-    x = linspace(a,b,N);
-    F = zeros(1,N);
-    F(2:end-1) = arrayfun(f,x(2:end-1));
-    F(1) = F(2);
-    F(end) = F(end-1);
-    %plot(x,F)
-    I = dx/3*(4*sum(F(2:2:end-1))+2*sum(F(3:2:end-3))+F(1)+F(end));
-end
-
 function [I] = simpsons_rule(f,a,b)
+    % Simpson's Rule
     c = (a+b)/2;
     h = (b-a)/6;
     I = h*(f(a)+4.0*f(c)+f(b));
 end
 
 function [IN] = adaptive_simpson_rule(f,a,b,eps,base,N)
+    % Recursive Adavtibe Simpson's Rule
     c = (a+b)/2;
     l = simpsons_rule(f,a,c);
     r = simpsons_rule(f,c,b);

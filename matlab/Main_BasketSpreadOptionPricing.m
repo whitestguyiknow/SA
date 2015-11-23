@@ -4,7 +4,7 @@
 
 %clear all;
 
-str_now = char(datetime('now'));
+str_now = char(date('now'));
 diary(['data/output_', str_now, '.txt']);
 
 seed = 133781;
