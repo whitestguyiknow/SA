@@ -1,0 +1,142 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[us]{datetime}
+\usepackage{multirow}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{tocloft}
+\usepackage[nottoc]{tocbibind}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{bbm}
+\usepackage{theoremref}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+
+\large \textbf{Semesterthesis}
+
+\vspace{1cm}
+\hrule
+\vspace{0.4cm}
+\huge \textbf{Implementation of multi-asset spread option pricing methods}\\
+\vspace{0.4cm}
+\hrule
+\vspace{0.4cm}
+\textsc{\large ETH Z\"urich}\\
+\vspace{0.4cm}
+\large {November 2015}
+
+\vspace{6cm}
+
+
+
+
+\vspace{4cm}
+\large \emph{Author:}\\
+\large Daniel W\"alchli\\
+\large wadaniel@student.ethz.ch\\
+\vspace{1cm}
+\noindent
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \normalsize
+\emph{Examiner:}\\
+Prof. Dr. Erich \textsc{Farkas}\\
+PLE-H05\\
+Plattenstrasse 22\\
+8032 Z\"urich\\
+farkas@math.ethz.ch
+\end{flushleft}
+\end{minipage}%
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \normalsize
+\emph{Supervisor:} \\
+Mrs. Fulvia \textsc{Fringuellotti}\\
+PLE-G07\\
+Plattenstrasse 22\\
+8032 Z\"urich\\
+fulvia.fringuellotti@bf.uzh.ch
+\end{flushright}
+\end{minipage}
+
+\end{center}
+\end{titlepage}
+
+\pagenumbering{gobble}
+\section*{Abstract}
+Insert Abstract
+
+\newpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\section{Introduction}
+A hybrid European basket-spread option is a financial derivative, whose
+maturity is given by the difference (the so called spread) between two 
+baskets of aggregated and weighted underlying asset prices. In mathematical terms it's pay-off is given by 
+the formula:
+\begin{equation}
+P(S,T) = (\sum_{i=0}^M w_iS_i(T) - \sum_{j=M+1}^{M+N} w_jS_j(T) - K)^+,
+\end{equation}
+with $(x)^+=max(x,0)$ and where $S_i$ is the ith underlying asset price, $w_i$ its weight and $K$ is the strike price.
+Basket-spread options play an important role in hedging a portfolio of correlated long and short
+positions. Especially they are very common in commodity markets,
+as producers are exposed to risks arising from spreads between feedstock and end products.
+Basket-spread options are traded over-the-counter and on exchanges. Since there is no
+closed-form solution available for the fair price it is inescapable to have an accurate and
+fast approximation method at hand. The multi-dimensionality and
+hence the lack of a marginal distribution for the basket-spread makes it impossible to give an exact
+analytical representation for the price (even not in the simplest framework
+where the asset prices are driven by  correlated geometric Brownian motions). Numerical approaches such 
+as Monte Carlo simulations or PDE methods become very slow and hence inpracticble as the number of underlyings increases. 
+Therefore I closely look at two different basket-spread option pricing methods which have been 
+introduced by S.Deng, M.Li, and J.Zhou [1] and by G.Deelstra, A.Petkovic and M.Vanmaele [2]. According to the authors both the second-order
+boundary approximation method [1,Chap.3,Prop.5] and the hybrid moment matching method associated to the improved comonotonic upper bound (HybMMICUB)
+[2,Chap.3,Prop.5] are considered to be extremely fast and accurate. Therefore I implement both methods in MATLAB
+and compare their numerical performances as a function of the basket spread characteristics. 
+As a comparison benchmark I estimate the true prices with Monte Carlo simulations also implemented in MATLAB.\\
+The paper is organized as follows.
+
+\newpage
+\section{Second-order Boundary Approximation}
+Insert text.
+\label{sec:sob}
+
+\newpage
+\section{Hybrid Moment Matching associated with Improved Comontonic Upper Bound}
+Insert text.
+\label{sec:hybmmicup}
+
+\newpage
+\section{Results and Future Work}
+\label{sec:results}
+Insert Results and other text.
+
+\newpage
+\begin{thebibliography}{1}
+\bibitem{sob} 
+S.J. Deng, M. Li, J. Zhou.
+\textit{Multi-asset Spread Option Pricing and Hedging.}
+October 29, 2007. School of Industrial and Systems Engineering, Georgia Institute of Technology, Atlanta.
+
+\bibitem{sob} 
+G. Deelstra, A. Petkovic, M. Vanmaele.
+\textit{Pricing and Hedging Asian Basket Spread Options.}
+2010. Journal of Computational and Applied Mathematics 233 2814-2830.
+
+\end{thebibliography}
+
+\end{document}
+
