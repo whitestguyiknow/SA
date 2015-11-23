@@ -11,3 +11,7 @@
 -plot convergence and integrands from HybMMICUB
 -check dates of references
 -look through introduction of SOB method, state in my introduction earlier work
+
+## 23.Nov
+-use Proposition commands and others in latex (like other SA)
+
