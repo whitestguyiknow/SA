@@ -1,3 +1,4 @@
 # ignore generated m~ files
 *.m~
 *.swp
+.DS_Store

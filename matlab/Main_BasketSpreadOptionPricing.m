@@ -1,8 +1,11 @@
 %% Basekt Spread Option Pricing
-% Author: Daniel Wälchli
+% Author: Daniel W??lchli
 % November 2015
 
 %clear all;
+
+str_now = char(datetime('now'));
+diary(['data/output_', str_now, '.txt']);
 
 seed = 133781;
 rng(seed);
