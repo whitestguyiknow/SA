@@ -1,0 +1,18 @@
+#3. Hybrid Moment Matching associated with Improved Comontonic Upper Bound
+The hybrid moment matching method associated with improved comontonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums. Then both sums are moment matched with a log-normal random variable. Second, the price of the resulting spread option is approximated with the improved comontonic upper bound method. Among others the HybMMICUP procedure has been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that it is the best performing method to approximate the price of a basket spread option. The HybMMICUP method can also price options of Asian type but this case won’t be treated in my work.
+More formally, the fair value of the hybrid European basket spread option will be rewritten as
+V = exp(-r*T)E^Q[max(S1(T) - S2(T) - K,0)], where Sj is a log-normal random variable with mean u_j = 2ln(m_1j) - 1/2ln(m_2j)
+and variance sigma_j^2 = ln(m_2j)-2ln(m_1j).
+S1 and S2 represent the weighted sums of the assets with positive and negative sign and m_1j and m_2j are the first and second moment of the respective sum S_j. There are different studies on how to approximate the moments of a sum of log-normal distributed random variables (such as [7] and [8]). The formula used to reproduce the results from [2] is as follows:
+m_1j =
+m_2j =
+Additionally we need the correlation coefficient rho between ln(~S_1) and ln(~S_2) to approximate the spread given in (?). It can be recovered from the eqiality of cross moments (crm:
+E[S_1S_2] = E[~S_1~S_2],
+namely
+crm:=sumsum ..
+where E[S(T)_jS(T)_i] = S_i(0) S_j(0) exp(2r T + rho_{ij} sigma_i sigma_j T).
+For an approximation of the spread (?) the improved comontonic upper bound (ICUB) is used. The ICUB is displayed in the next proposition, the proof can be found in [2, Appendix]:
+Proposition ?:
+
+
+
