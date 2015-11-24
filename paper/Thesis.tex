@@ -145,7 +145,7 @@ thus we introduce the random variables
 $$H_0(t)=\sum_{i=1}^M S_t(t)$$ 
 and 
 $$H_k(t)=S_{k+M}(t), \;k=1,2,...,N$$
-which can be plugged into preceding payoff (equation \ref{eq:sobpo}) and replace $S_0(T)$ and $S_j(T)$. The idea is to approximate the distribution of $H_0(T)$ by the geometric averages of the corresponding  $S_i$'s, which is crucial for the extension of the SOD method to hybrid basked-spread options. Notice that $log(H_0(T))$ is not normally distributed nor are the $log(H_i)$'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed.\\
+which can be plugged into preceding payoff (equation \ref{eq:sobpo}) and replace $S_0(T)$ and $S_j(T)$. The idea is to approximate the distribution of $H_0(T)$ by the geometric averages of the corresponding  $S_i$'s to extend the SOD method to price hybrid basked-spread options. Notice that $log(H_0(T))$ is not normally distributed nor are the $log(H_i)$'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed.\\
 The mean and the variance of the newly introduced random variable $H_0(T)$ is approximated by 
 $$\mu_0^H = log(\sum_{i=0}^{M}e^{\mu_i+1/2{\sigma_i}^2}) - 1/2{\sigma_0^H}^2$$ 
 and 
@@ -271,9 +271,19 @@ $$v'P^2FP^2v=\psi^2v'Fv,$$
 $$||PFP^2v||^2=\psi^2[v'F^2v-\psi(v'Fv)^2],$$
 $$tr(PFP)=tr(F)-\psi v'Fv.$$
 Thus the scalar function $J^i$'s given in (\ref{eq:j0}-\ref{eq:j2}) can be simplified as
-$$J^0(u,v)=\Phi(u\sqrt{v})$$
-$$J^1(u,v)=\psi^{3/2}(\psi u^2/1)v'Fv\phi(u\sqrt{\psi}),$$
-$$J^2(u,v)=u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2)-4(1-tr(F))\psi-\psi^2)v'Fv+\psi^2(9+(2-3u^2)\psi-u^2(4-u^2)\psi^2)(v'Fv)^2-2\psi(5+(1-2u^2)\psi)v'F^2v\big\}.$$
+\begin{equation}
+J^0(u,v)=\Phi(u\sqrt{v}),
+\end{equation}
+\begin{equation}
+J^1(u,v)=\psi^{3/2}(\psi u^2/1)v'Fv\phi(u\sqrt{\psi}),
+\end{equation}
+\begin{equation}
+\begin{split}
+J^2(u,v)=&u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2) - 4(1-tr(F))\psi-\psi^2)v'Fv+ \\
+	& \psi^2(9+(2-3u^2)\psi-u^2(4-u^2)\psi^2)(v'Fv)^2-\\
+	&2\psi(5+(1-2u^2)\psi)v'F^2v\big\}.
+\end{split}
+\end{equation}
 \end{prop}
 
 
