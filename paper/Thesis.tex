@@ -88,6 +88,7 @@ maturity is given by the difference (the so called spread) between two
 baskets of aggregated and weighted underlying asset prices. In mathematical terms it's pay-off is given by 
 the formula:
 \begin{equation}
+\label{eq:po}
 P(S,T) = (\sum_{i=0}^M w_iS_i(T) - \sum_{j=M+1}^{M+N} w_jS_j(T) - K)^+,
 \end{equation}
 with $(x)^+=max(x,0)$ and where $S_i$ is the ith underlying asset price, $w_i$ its weight and $K$ is the strike price.
@@ -110,14 +111,165 @@ As a comparison benchmark I estimate the true prices with Monte Carlo simulation
 The paper is organized as follows.
 
 \newpage
-\section{Second-order Boundary Approximation}
-Insert text.
-\label{sec:sob}
+\section{Approximation methods}
+\label{sec:am}
+In the next subsection \ref{sec:ms} I show the assumptions on which both the second-order boundary method and the HybMMICUB method are based on. Followed by subsection \ref{sec:sob} and \ref{sec:hybmmicup} which both formally present the two approximation methods. These subsections will closely follow the works of S.Deng, M.Li, and J.Zhou [1] and by G.Deelstra, A.Petkovic and M.Vanmaele [2].
 
-\newpage
-\section{Hybrid Moment Matching associated with Improved Comontonic Upper Bound}
-Insert text.
+\subsection{Model setup}
+\label{sec:ms}
+Consider M+N assets $S_1(t), S_2(t), ...,$ and $S_{M+N}(t)$ each of it following a geometric Brownian motion
+$$dS_i(t) = u_iS_i(t)dt + \sigma_iS_i(t)dW_i(t).$$
+The correlations of the Brownian motions $W_i(t)$ is given by the matrix $\varrho=(\rho_{i,j})$. 
+The payoff of the hybrid European basket-spread has already been introduced in equation \ref{eq:po}. Conditioning on the initial asset price $S_i(0), log(S_i(T))$ is jointly normally distributed with mean $\mu_i$, variance $\sigma_i^2$.  correlation matrix $\rho_{i,j}$ for i,j = 1,2,...,M+N. 
+Further the interest rate $r$ is constant and the price of the hybrid European basket-spread option is given by
+\begin{equation}
+\label{eq:mg}
+V = e^{-rT}E^{\mathbb{Q}}[(\sum_{i=0}^M w_iS_i(T) - \sum_{j=M+1}^{M+N} w_jS_j(T) - K)^+],
+\end{equation}
+where $\mathbb{Q}$ is the risk-neutral measure under which discounted security prices are martingales.
+In the GBM setting the means and variances are defined by 
+$$\mu_i = E^\mathbb{Q}[log(S_i(T))] = log(S_i(0)) + (r-\frac{1}{2}{\sigma_k}^2)T$$ and $${\sigma_i}^2 = Var^\mathbb{Q}[log(S_k(T))] = \sigma_i\sqrt{T}, i=1,2,...,M+N.$$
+Because the weights $w_i$ can be incorporated in the asset price by taking $S_i(t)'=w_iS_i(t)$ and $\mu_i=log(w_i)+\mu_i, \sigma_i'=\sigma_i and \rho_{i,j}'=\rho_{i,j},$
+we will assume that all weights $w_i$ equal 1 without loss of generality.
+
+\subsection{Second-order Boundary Method}
+\label{sec:sob}
+The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1]. Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing for spread options involving only two underlyings. In [1] Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) [4] which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. The computational edge of the SOB method lies in its closed form solution which only involves arithmetic calculations.\\
+The SOD method approximates the price of a spread option with payoff
+\begin{equation}
+\label{eq:sobpo}
+(S_0(T) - \sum_{j=1}^{N}S_j(T) - K)^+, 
+\end{equation}
+thus we introduce the random variables $$H_0(t)=\sum_{i=1}^M S_t(t)$$ and $$H_k(t)=S_{k+M}(t), k=1,2,...,N$$
+which can be plugged into preceding payoff (equation \ref{eq:sobpo}) and replace $S_0(T)$ and $S_j(T)$. The idea is to approximate the distribution of $H_0(T)$ by the geometric averages of the corresponding  $S_i$'s, which is crucial for the extension of the SOD method to hybrid basked-spread options. Notice that $log(H_0(T))$ is not normally distributed nor are the $log(H_i)$'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed.\\
+The mean and the variance of the newly introduced random variable $H_0(T)$ is approximated by $$\mu_0^H = log(\sum_{i=0}^{M}e^{\mu_i+1/2{\sigma_i}^2}) - 1/2{\sigma_0^H}^2$$ and $$\sigma_0^H=\frac{1}{M}\sqrt{\sum_{i=1}^M \sum_{j=1}^M \rho_{i,j} \sigma_i \sigma_j}$$
+Next we define random variables $X$ and $Y_k$ by
+$$X = \frac{log(H_0(T))-\mu_0^H}{\sigma_0^H}, Y_k = \frac{log(H_k(T))-\mu_k^H)}{\sigma_k^H}, k=1,2,...,N$$
+whereas $\mu_k^H = \mu_k+M$ and $\sigma_k^H = \sigma_k+M$ for $k=1,2,...,N$. Following that we can approximate the variables $X$ and $Y_k$ as jointly normally distributed with mean vector 0, variance vector 1 and correlation matrix $\Sigma = (q_i,j)$ for $i,j=0,1,...,N$, where 
+$$q_{0,0}=1,$$ 
+$$q_{0,k}=q_{k,0}=1,$$
+$$q_{i,j}=\rho_{M+i,M+j}.$$
+Rewriting the correlation matrix $\Sigma$ as a composition of a Nx1 vector $\Sigma_{10}$ and $\Sigma_{11}$ the NxN correlation matrix of the $Y_k$'s
+$$\Sigma = (q_{i,j}) = \begin{pmatrix} 1 & \Sigma_{10}' \\ \Sigma_{10} & \Sigma_{11} \end{pmatrix}$$ simplifies notation for later computations. 
+Before introducing the methods for valuing hybrid basket-spread option a short analysis of the exercise boundary is necessary. At time T, the hybrid basket-spread option is in-the-money 
+if $H_0(T) - \sum_{k=1}^N S_k(T)-K>0$. If $K>0$, rewriting this inequality in terms of the random variable $X$ gives
+$$X>\frac{log(\sum e^{\sigma_kY_k-\mu_k+K}-\mu_0^H}{\sigma_0^H}$$
+Conditioned on $Y_k=y_k$, the option is in-the-money if $X>x(y)$, where
+$$x(y)\equiv\frac{log(\sum e^{\sigma_ky_k-\mu_k+K}-\mu_0^H)}{\sigma_0^H}.$$
+Note that the exercise boundary $x(y)$ is a nonlinear function in the components of y but close to being linear around $y=0$.
+The analytical computation of the expectation value given in equation \ref{eq:mg} is shown below:
+\begin{equation}
+\label{eq:val}
+V= e^{-rT} \int_{\mathbb{R}^N} \int_\mathbb{R} \big(e^{\sigma_0^Hx+\mu_0^H}-\sum_{k=1}^Ne^{\sigma_ky_k+\mu_k}-K\big)^+\phi(\{x,y\};0,\Sigma) dx dy,
+\end{equation}
+whereas $\phi(z;m;\Sigma)$ stands for the multivariate normal density function with mean vector m and covariance matrix $\Sigma$. Note that the random variables $X$ and $Y$ in equation $\ref{eq:val}$ are approximately jointly normally distributed with density $\phi({x,y};0;\Sigma)$.\\
+Proposition 1 (Pearson (1995) [5]) allows us to reduce the (N+1)-dimensional integral from above (equation \ref{eq:val}) to N+2 N-dimensional integrals.
+
+\newtheorem{prop}{Proposition}
+\begin{prop}
+\label{prop:price}
+Under the jointly-normal returns setup with $K \geq 0$ and det $\Sigma \neq 0$, the price of the spread option (equation \ref{eq:sobpo}) can be written as
+$$V=e^{-rT+\mu_0^H+\frac{1}{2}\sigma_0^{H2}}I_0-\sum_{k=1}^Ne^{-rT+\mu_k+\frac{1}{2}\sigma_k^2}I_k-Ke^{-rT}I_{N+1}.$$
+The integrals $I_i$'s are given by
+$$I_0=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y+\sigma_0^H\Sigma_{10})+\sigma_0^H\sqrt{\Sigma_{x|y}}\big)dy,$$
+$$I_k=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y+\sigma_k\Sigma_{11}e_k)\big)dy, k=1,2,...,N,$$
+$$I_{N+1}=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y)\big)dy,$$
+where $e_k$ is the unit column vector (0,...,0,1,0,...,0)' with 1 at the k-th position, and
+$$A(y)=\frac{\mu_{x|y}-x(y)}{\sqrt{\Sigma_{x|y}}},$$
+with
+$$\mu_{x|y}=\Sigma_{10}'\Sigma_{11}^{-1}y, \Sigma_{x|y}=1-\Sigma_{10}'\Sigma_{11}^{-1}\Sigma_{10}.$$
+\end{prop}
+
+In proposition \ref{prop:price} $\Phi(z)$ stands for the one-dimensional cumulative distribution function. Note that I already plugged in the approximated mean $\mu_0^H$ and variance $\sigma_0^H$ of the random variable $H_0(t)$ what I also do for the following propositions.\\
+Recover that det $\Sigma \neq 0$ such that $\Sigma_{x|y} \neq 0$, det $\Sigma_{11} \neq 0$ and $A(y)$ is always well defined. In the GBM setting, the price $V$ reduces to the form
+\begin{equation}
+\label{eq:cf}
+V = S_0(t)e^{-q_0T}I_0-\sum_{k=1}^NS_k(0)e^{-q_kT}I_k-Ke^{-rT}I_{N+1}.
+\end{equation}
+The proof of Proposition 1 can be found in [1] in the appendix. 
+The formula presented above is the starting point of our next approximation. We do a second order taylor expansion of the exercise boundary $x(y)$ and the function $A(y)$ such that the $I_k$'s can be computed in closed form. Observe that $A(y)$ is also close to being linear around $y=0$. The second order approximation of $x(y)$ and $A(y)$ is given by:
+
+\begin{prop}
+\label{prop:approx}
+The exercise boundary x(y) can be approximated to second order in y as
+$$x(y)\approx x(0)+\triangledown x|_0'y+\frac{1}{2}y'\triangledown^2x|_0y,$$
+where
+$$x(0)=\frac{log(R+K)-\mu_0^H}{\sigma_0^H},$$
+$$(\triangledown x|_0)_k=\frac{e^{\mu_k}\sigma_k}{\sigma_0^H(R+K)},k=1,2,...,N,$$
+$$(\triangledown^2 x|_0)_{i,j}=\frac{e^{\mu_i+\mu_j}\sigma_i\sigma_j}{\sigma_0^H(R+K)^2}+\delta_{i,j}\frac{v_j^2e^\mu_j}{\sigma_0^H(R+K)},i,j=1,2,...,N$$
+with $\delta_{i,j}$ being the Kronecker delta function, and
+$$R=\sum_{k=1}^Ne^{\mu_k}.$$
+Accordingly, the function A(y) can be approximated as
+$$A(y)=\frac{\mu_{x|y}-x(y)}{\sqrt{\Sigma_{x|y}}}\approx c+d'y+y'Ey,$$
+where
+$$c=-\frac{log(R+K)-\mu_0^H}{v_0^H\sqrt{\Sigma_{x|y}}},$$
+$$d=\frac{1}{\sqrt{\Sigma_{x|y}}}(\Sigma_{11}^{-1}\Sigma_{10}-\triangledown x|_0),$$
+$$E=-\frac{1}{2\sqrt{\Sigma_{x|y}}}(\triangledown^2 x|_0).$$
+\end{prop}
+To gain a closed-form approximation of the option price (equation \ref{eq:cf}) we need to further expand $\Phi(c+d'y+y'Ey)$ into three terms to second order in $y'Ey$ around $y'Ey=\epsilon$. The approximation formula of the price of a hybrid basket-spread is presented in Proposition \ref{prop:price}, which has been derived with the help of an identity in Li (2004) [6]. 
+\begin{prop}
+\label{prop:approx2}
+Let $K\geq0$ and det$\Sigma \neq 0$. The spread option price V under the general jointly-normal returns setup is given by
+\begin{equation}
+\label{eq:cf2}
+V=e^{-rT+\mu_0^H+\frac{1}{2}\sigma_0^{H2}}I_0-\sum_{k=1}^Ne^{-rT+\mu_k+\frac{1}{2}\sigma_k^2}I_k-Ke^{-rT}I_{N+1}.
+\end{equation}
+The integrals $I_i$'s are approximated as
+$$I_i\approx J^0(c_i,d_i)+J^1(c_i,d_i)-frac{1}{2}J^2(c_i,d_i), i=0,1,...,N+1,$$
+where the scalar functions $J^i$ are defined as
+\begin{equation}
+\label{eq:j0}
+J^0(u,v)=\Phi\Big(\frac{u}{\sqrt{1+v'v}}\Big),
+\end{equation}
+\begin{equation}
+\label{eq:j1}
+J^1(u,v)=\frac{\lambda}{\sqrt{1+v'v}}\phi\Big(\frac{u}{\sqrt{1+v'v}}\Big),
+\end{equation}
+\begin{equation}
+\label{eq:j2}
+J^2(u,v)=\frac{u}{(1+v'v)^{3/2}}\phi\Big(\frac{u}{\sqrt{1+v'v}}\Big)\\\Big\{\lambda^2+2tr[(PFP)^2]-4\lambda(1+v'v)(v'P^2FP^2v)+(4u^2-8-8v'v)||PFP^2v||^2\Big\},
+\end{equation}
+with
+\begin{equation}
+\label{eq:p}
+P=P(v)\equiv(I+vv')^{-1/2},
+\end{equation}
+$$\lambda=\lambda(u,v)\equiv u^2v'P^2FP^2v+tr(PFP)-tr(F),$$
+where tr stands for the trace operator of a matrix. The scalars $c_i$, vectors $d_i$, and matrix $F$ are given by
+$$c_0=c+tr(F)+\sigma_0^H\sqrt{\Sigma_{x|y}}+\sigma_0\Sigma_{10}'d+\sigma_0^{H2}\Sigma_{10}'E\Sigma_{10},$$
+$$d_0=\Sigma_{11}^{1/2}(d+2\sigma_0^HE\Sigma_{10}),$$
+$$c_k=c+tr(F)+\sigma_ke_k'\Sigma_{11}d+\sigma_k^2e_k'\Sigma_{11}E\Sigma_{11}e_k,k=0,1,...,N,$$
+$$d_k=\Sigma_{11}^{1/2}(d+2\sigma_kE\Sigma_{11}e_k),k=1,2,...,N,$$
+$$c_{N+1}=c+tr(F),$$
+$$d_{N+1}=\Sigma_{11}^{1/2}d,$$
+$$F=\Sigma_{11}^{1/2}E\Sigma_{11}^{1/2},$$
+with $\Sigma_{x|y}$ given in Proposition \ref{prop:price}.
+
+\end{prop}
+
+The computation in Proposition \ref{prop:approx2} appears to be cumbersome but most of the matrix multiplication can be bypassed which is shown in proposition 4. The proofs of propositions 3(4) and 4(5) can be found in [1] in the appendix. 
+
+\begin{prop}
+\label{prop:app2short}
+With $P = P(v)$ as defined in equation \ref{eq:p}, we have
+$$P=I-\theta vv', P^2=I-\psi vv',$$
+where th scalars $\theta$ and $\psi$ are given by
+$$\theta=\theta(v)=\frac{\sqrt{1+v'v}-1}{v'v+\sqrt{1+v'v}},\psi=\psi(v)=\frac{1}{1+v'v}.$$
+Furthermore, we have
+$$tr[(PFP)^2]=tr(F^2)-\psi(1+\psi)v'F^2v,$$
+$$v'P^2FP^2v=\psi^2v'Fv,$$
+$$||PFP^2v||^2=\psi^2[v'F^2v-\psi(v'Fv)^2],$$
+$$tr(PFP)=tr(F)-\psi v'Fv.$$
+Thus the scalar function $J^i$'s given in (\ref{eq:j0}-\ref{eq:j2}) can be simplified as
+$$J^0(u,v)=\Phi(u\sqrt{v})$$
+$$J^1(u,v)=\psi^{3/2}(\psi u^2/1)v'Fv\phi(u\sqrt{\psi}),$$
+$$J^2(u,v)=u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2)-4(1-tr(F))\psi-\psi^2)v'Fv+\psi^2(9+(2-3u^2)\psi-u^2(4-u^2)\psi^2)(v'Fv)^2-2\psi(5+(1-2u^2)\psi)v'F^2v\big\}.$$
+\end{prop}
+
+
+\subsection{Hybrid Moment Matching associated with Improved Comontonic Upper Bound}
 \label{sec:hybmmicup}
+Insert text.
 
 \newpage
 \section{Results and Future Work}

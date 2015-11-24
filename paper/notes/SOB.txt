@@ -1,9 +1,3 @@
-#2. Second-Order Boundary Method
-The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1].
-Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing 
-for spread options involving only two underlyings. In [1] Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) [4] 
-which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. 
-The computational edge of the SOB method lies in its closed form solution which only involves arithmetic calculations.
 #2.1 Model Setup
 This section presents the SOB method introduced by Deng, Li and Zhou [1, Chap.2,3].
 Consider M+N assets S1(t),S2(t),..., and SM+N(t) which’s price process follows a GBM
@@ -17,7 +11,16 @@ where Q is the risk-neutral measure under which discounted security prices are m
 mu_i = E^Q[logS_k(T)] = log(s_i) + (r-1/2sigma_k^2)*T and v_i^2 = Var^Q[log(S_k(T))] = sigma_k*sqrt(T), i=1,2,...,M+N.
 Because the weights w_i can be incorporated in the asset price by taking Si'=w_i*Si and u_i=log(w_i)+u_i, vi'=vi and rho_i,j'=rho_i,j,
 we will assume that all weights wi equal 1 without loss of generality.
+
+#2.2 Second-Order Boundary Method
+The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1].
+Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing 
+for spread options involving only two underlyings. In [1] Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) [4] 
+which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. 
+The computational edge of the SOB method lies in its closed form solution which only involves arithmetic calculations.
+
 Remark: The SOD method also allows a mean-reverting lor-Ornstein-Uhlenbeck setting, whereas applying the Ito-Lemma simply yields different definitions of mu_i, v_i and rho_i,j. 
+
 The SOD method approximates the price of a spread option with payoff [S_0(T) - sum_j=1^N Sj(T) - K,0)], thus we introduce the random variables H_0(t)=sum_i=1^M S_t(t) and H_k(t)=S_k+M(t), k=1,2,...,N 
 which can be plugged into preceding payoff formula. The idea is to approximate the distribution of H_0(T) by the geometric averages of the corresponding  S_i's, which	 is a crucial step in the extension of the SOD method for hybrid basked-spread options. Notice that log(H_0(T)) is not normally distributed nor are the log(H_i)'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed. 
 The mean and the variance of the newly introduced random variable H_0(T) is given by
@@ -40,12 +43,14 @@ Note that the exercise boundary x(y) is a nonlinear function in the components o
 The analytical computation of the expectation value (?) in integral form is shown below:
 V(mu,v,Sigma) = exp(-rT) integral integral ... dx dy
 whereas phi(z;m;Sigma) stands for the multivariate normal density function with mean vector m and covariance matrix Sigma. Note that the random variables X and Y in equation are approximately jointly normally distributed with density phi({x,y};0;Sigma)
+
+
 Proposition 1 (Pearson (1995) [5]) allows us to reduce the (N+1)-dimensional integral from above to N+2 N-dimensional integrals.
 Proposition 1:
 ...
 ...(name meaning of cdf)
 
-Recover that det(SIgma) /=/ 0 such that Sigma_x|y /=/0, det(Sigma_11) /=/ 0 and A(y) is always well defined. In the GBM setting, the price V to the form
+Recover that det(SIgma) /=/ 0 such that Sigma_x|y /=/0, det(Sigma_11) /=/ 0 and A(y) is always well defined. In the GBM setting, the price V reduces to the form
 V = s_0exp(-q_0T)I_0-sum_k=1^Ns_kexp(-q_kT)I_k-Kexp(-rT)I_N+1.
 The proof of Proposition 1 can be found in [1] in the appendix. 
 The formula presented above is the starting point of our next approximation as we do a second order taylor expansion of the exercise boundary x(y) and the function A(y) such that the I_k's can be performed in closed form. Observe that A(y) is also close to being linear around y=0. Now I present the second order approximation of x(y) and A(y):
