@@ -130,7 +130,7 @@ where $\mathbb{Q}$ is the risk-neutral measure under which discounted security p
 In the GBM setting the means and variances are defined by 
 $$\mu_i = E^\mathbb{Q}[log(S_i(T))] = log(S_i(0)) + (r-\frac{1}{2}{\sigma_k}^2)T$$ 
 and
-$${\sigma_i}^2 = Var^\mathbb{Q}[log(S_k(T))] = \sigma_i\sqrt{T}, \; i=1,2,...,M+N.$$
+$${\sigma_i}^2 = Var^\mathbb{Q}[log(S_k(T))] = \sigma_i\sqrt{T}, \quad i=1,2,...,M+N.$$
 Because the weights $w_i$ can be incorporated in the asset price by taking $S_i(t)'=w_iS_i(t)$ and $\mu_i=log(w_i)+\mu_i, \sigma_i'=\sigma_i$ and $\rho_{i,j}'=\rho_{i,j},$ we will assume that all weights $w_i$ equal 1 without loss of generality.
 
 \subsection{Second-order Boundary Method}
@@ -144,14 +144,14 @@ The SOD method approximates the price of a spread option with payoff
 thus we introduce the random variables 
 $$H_0(t)=\sum_{i=1}^M S_t(t)$$ 
 and 
-$$H_k(t)=S_{k+M}(t), \;k=1,2,...,N$$
+$$H_k(t)=S_{k+M}(t), \quad k=1,2,...,N$$
 which can be plugged into preceding payoff (equation \ref{eq:sobpo}) and replace $S_0(T)$ and $S_j(T)$. The idea is to approximate the distribution of $H_0(T)$ by the geometric averages of the corresponding  $S_i$'s to extend the SOD method to price hybrid basked-spread options. Notice that $log(H_0(T))$ is not normally distributed nor are the $log(H_i)$'s jointly normally distributed. This comes from the fact that the sum of lognormal distributed random variables is no longer lognormal distributed.\\
 The mean and the variance of the newly introduced random variable $H_0(T)$ is approximated by 
 $$\mu_0^H = log(\sum_{i=0}^{M}e^{\mu_i+1/2{\sigma_i}^2}) - 1/2{\sigma_0^H}^2$$ 
 and 
 $$\sigma_0^H=\frac{1}{M}\sqrt{\sum_{i=1}^M \sum_{j=1}^M \rho_{i,j} \sigma_i \sigma_j}$$
 Next we define random variables $X$ and $Y_k$ by
-$$X = \frac{log(H_0(T))-\mu_0^H}{\sigma_0^H}, Y_k = \frac{log(H_k(T))-\mu_k^H)}{\sigma_k^H}, \: k=1,2,...,N$$
+$$X = \frac{log(H_0(T))-\mu_0^H}{\sigma_0^H}, Y_k = \frac{log(H_k(T))-\mu_k^H)}{\sigma_k^H}, \quad k=1,2,...,N$$
 whereas $\mu_k^H = \mu_k+M$ and $\sigma_k^H = \sigma_k+M$ for $k=1,2,...,N$. Following that we can approximate the variables $X$ and $Y_k$ as jointly normally distributed with mean vector 0, variance vector 1 and correlation matrix $\Sigma = (q_{i,j})$ for $i,j=0,1,...,N$, where 
 $$q_{0,0}=1,$$ 
 $$q_{0,k}=q_{k,0}=1,$$
@@ -179,7 +179,7 @@ Under the jointly-normal returns setup with $K \geq 0$ and det $\Sigma \neq 0$, 
 $$V=e^{-rT+\mu_0^H+\frac{1}{2}\sigma_0^{H2}}I_0-\sum_{k=1}^Ne^{-rT+\mu_k+\frac{1}{2}\sigma_k^2}I_k-Ke^{-rT}I_{N+1}.$$
 The integrals $I_i$'s are given by
 $$I_0=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y+\sigma_0^H\Sigma_{10})+\sigma_0^H\sqrt{\Sigma_{x|y}}\big)dy,$$
-$$I_k=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y+\sigma_k\Sigma_{11}e_k)\big)dy, \; k=1,2,...,N,$$
+$$I_k=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y+\sigma_k\Sigma_{11}e_k)\big)dy, \quad k=1,2,...,N,$$
 $$I_{N+1}=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y)\big)dy,$$
 where $e_k$ is the unit column vector (0,...,0,1,0,...,0)' with 1 at the k-th position, and
 $$A(y)=\frac{\mu_{x|y}-x(y)}{\sqrt{\Sigma_{x|y}}},$$
@@ -292,11 +292,39 @@ J^2(u,v)=&u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2) - 4(1-tr(F))\psi-\psi^2)v'Fv+
 The hybrid moment matching method associated with improved comontonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums $\mathbb{S}_1$ and $\mathbb{S}_2$. Then both sums are moment matched with a log-normal random variable. Second, the price of the price of the resulting spread option with payoff $(\mathbb{S}_1-\mathbb{S}_2-K)^+$ is approximated with the improved comontonic upper bound method. The HybMMICUP procedure and other methods been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that it is the best performing method to approximate the price of a basket spread option. The HybMMICUP method can also price options of Asian type but this case won’t be treated in my work.\\
 More formally, the fair value of the hybrid European basket spread option will be rewritten as
 \begin{equation}
+\label{eq:spread}
 V = e^{-rT}\mathbb{E}^\mathbb{Q}(S_1(T) - S_2(T) - K)^+, 
 \end{equation} 
 where $S_j$ is a log-normal random variable with mean $u_j = 2ln(m_{1j}) - 1/2ln(m_{2j})$ and variance $\sigma_j^2 = ln(m_{2j})-2ln(m_{1j}).$
-$S_1$ and $S_2$ represent the weighted sums of the assets with positive and negative sign and $m_{1j}$ and $m_{2j}$ are the first and second moment of the respective sum $S_j$. There are different studies on how to approximate the moments of a sum of log-normal distributed random variables (such as [7] and [8]). The formula used to reproduce the results from [2] is as follows:
-
+$S_1$ and $S_2$ represent the weighted sums of the assets with positive and negative sign and $m_{1j}$ and $m_{2j}$ are the first and second moment of the respective sum $S_j$. There are different studies on how to approximate the moments of a sum of log-normal distributed random variables (such as [7] and [8]). The formula I used to reproduce the results from [2] is as follows:
+\begin{equation}
+m_{11}=e^{rT}\sum_{i=1}^{M}S_i(0), \quad m_{12}=e^{rT}\sum_{i=M+1}^{M+N}S_i(0), 
+\end{equation}
+\begin{equation}
+m_{2j}=e^{2rT}\sum_{i=1}^{M}\sum_{j=1}^{M+N}S_i(0)S_j(0)e^{\rho_{i,j}\sigma_i\sigma_jT}
+\end{equation}
+Additionally we need the correlation coefficient rho between $ln(\mathbb{\tilde{S}}_1)$ and $ln(\mathbb{\tilde{S}}_2)$ to approximate the spread given in equation \ref{eq:spread}. It can be recovered from the eqiality of cross moments (crm):
+$$\mathbb{E}[S_1S_2] = \mathbb{E}[\tilde{S}_1\tilde{S}_2],$$
+namely
+\begin{equation}
+crm:=\sum_{i=1}^{M}\sum_{j=1}^{M+N}\mathbb{E}[S_i(T)S_j(T)]=e^{\mu_1+\mu_2+1/2\sigma_1^2+1/2\sigma_2^2+\sigma_1\sigma2\rho},
+\end{equation}
+where $\mathbb{E}[S_i(T)S_j(T)] = S_i(0) S_j(0) e^{2rT+\rho_{ij}\sigma_i\sigma_jT}.$
+For an approximation of the spread (\ref{eq:spread}) the improved comontonic upper bound (ICUB) is used. The ICUB is displayed in the next proposition, the proof can be found in [2, Appendix]:
+\begin{prop}
+Consider the following stop-loss premium
+$$\mathbb{E}[(e^{\mu_1+\sigma_1X_1}-e^{\mu_2+\sigma_2X_2}-K)^+],$$
+with $X_1$, $X_2$ two correlated standard normal random variables. The comonotonic improved upper bound of this spread is given by
+\begin{equation}
+\sum_{i=1}^2\epsilon_i\int_0^1e^{\mu_i+A_i(u)+1/2Y_i^2}\Phi\big(Y_i-\Phi^{-1}\big(F_{\mathbb{S}^{ic}|U=u}(K)\big)\big)du-K\big(1-F_{\mathbb{S}^{ic}}(K)\big),
+\end{equation}
+where $\epsilon_1=1$ and $\epsilon_2=-1$, and where $F_{\mathbb{S}^{ic}|U=u}$ can be found by solving
+\begin{equation}
+\sum_{i=1}^2\epsilon_ie^{\mu_i+A_i(u)+Y_i\Phi^{-1}(F_{\mathbb{S}^{ic}|U=u}(K))}=K,
+\end{equation}
+with, for $\gamma_i$ denoting the correlation between $X_i$ and the conditioning variable $\Lambda \stackrel{d}{=} \mathbb{E}[\Lambda]+\sigma_{\Lambda}\Phi^{-1}(U)$
+$$A_i(u)=\gamma_i\sigma_i\Phi^{-1}(u),\quad Y_i=\epsilon_i\sigma_i\sqrt{1-\gamma_i^2}, \quad F_{\mathbb{S}^{ic}}(K) = \int_0^1F_{\mathbb{S}^{ic}|U=u}(K)du.$$
+\end{prop}
 
 \newpage
 \section{Results and Future Work}
