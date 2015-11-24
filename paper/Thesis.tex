@@ -124,7 +124,7 @@ The payoff of the hybrid European basket-spread has already been introduced in e
 Further the interest rate $r$ is constant and the price of the hybrid European basket-spread option is given by
 \begin{equation}
 \label{eq:mg}
-V = e^{-rT}E^{\mathbb{Q}}[(\sum_{i=0}^M w_iS_i(T) - \sum_{j=M+1}^{M+N} w_jS_j(T) - K)^+],
+V = e^{-rT}\mathbb{E}^{\mathbb{Q}}[(\sum_{i=0}^M w_iS_i(T) - \sum_{j=M+1}^{M+N} w_jS_j(T) - K)^+],
 \end{equation}
 where $\mathbb{Q}$ is the risk-neutral measure under which discounted security prices are martingales.
 In the GBM setting the means and variances are defined by 
@@ -286,10 +286,17 @@ J^2(u,v)=&u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2) - 4(1-tr(F))\psi-\psi^2)v'Fv+
 \end{equation}
 \end{prop}
 
-
+\newpage
 \subsection{Hybrid Moment Matching associated with Improved Comontonic Upper Bound}
 \label{sec:hybmmicup}
-Insert text.
+The hybrid moment matching method associated with improved comontonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums $\mathbb{S}_1$ and $\mathbb{S}_2$. Then both sums are moment matched with a log-normal random variable. Second, the price of the price of the resulting spread option with payoff $(\mathbb{S}_1-\mathbb{S}_2-K)^+$ is approximated with the improved comontonic upper bound method. The HybMMICUP procedure and other methods been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that it is the best performing method to approximate the price of a basket spread option. The HybMMICUP method can also price options of Asian type but this case won’t be treated in my work.\\
+More formally, the fair value of the hybrid European basket spread option will be rewritten as
+\begin{equation}
+V = e^{-rT}\mathbb{E}^\mathbb{Q}(S_1(T) - S_2(T) - K)^+, 
+\end{equation} 
+where $S_j$ is a log-normal random variable with mean $u_j = 2ln(m_{1j}) - 1/2ln(m_{2j})$ and variance $\sigma_j^2 = ln(m_{2j})-2ln(m_{1j}).$
+$S_1$ and $S_2$ represent the weighted sums of the assets with positive and negative sign and $m_{1j}$ and $m_{2j}$ are the first and second moment of the respective sum $S_j$. There are different studies on how to approximate the moments of a sum of log-normal distributed random variables (such as [7] and [8]). The formula used to reproduce the results from [2] is as follows:
+
 
 \newpage
 \section{Results and Future Work}
