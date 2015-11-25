@@ -33,15 +33,14 @@ I = (e==1);
 M = sum(I);
 
 S0 = S0.*a;
-u0 = log(S0(I))+(r-0.5*sigma(I).^2)*T;                              % (5)
-uk = log(S0(~I))+(r-0.5*sigma(~I).^2)*T;                            % (5)
+u0 = log(S0(I))+(r-0.5*sigma(I).^2)*T;                                          % (5)
+uk = log(S0(~I))+(r-0.5*sigma(~I).^2)*T;                                        % (5)
 v0 = sigma(I)*sqrt(T);
-vk = sigma(~I)*sqrt(T);                                             % (5)
+vk = sigma(~I)*sqrt(T);                                                         % (5)
 
 % Approximate H0(T)
 vH0 = sqrt(v0*rho(I,I)*v0')/M;
 uH0 = log(sum(exp(u0+0.5*v0.^2)))-0.5*vH0^2;
-%uH0 = log(sum(S0(I)))+r*T+0.5*sum(v0.^2)/M;
 
 sigma_10 = sum(rho(~I,I).*repmat(v0,N-M,1),2)/(M*vH0);
 sigma_11 = rho(~I,~I);
@@ -60,9 +59,9 @@ R   = sum(exp(uk));
 dx  = exp(uk').*vk'/(vH0*(R+K));
 d2x = -vk'*vk*exp(repmat(uk',1,N-M)+repmat(uk,N-M,1))/(vH0*(R+K)^2)...
     +repmat(vk.^2.*exp(uk),N-M,1)/(vH0*(R+K));
-c   = -(log(R+K)-uH0)/(vH0*sigma_xy_sqrt);                          % (13)
-d   = 1/sigma_xy_sqrt*(sigma_11_inv_sigma_10-dx);                   % (14)
-E   = -0.5/sigma_xy_sqrt*d2x;                                       % (15)
+c   = -(log(R+K)-uH0)/(vH0*sigma_xy_sqrt);                                      % (13)
+d   = 1/sigma_xy_sqrt*(sigma_11_inv_sigma_10-dx);                               % (14)
+E   = -0.5/sigma_xy_sqrt*d2x;                                                   % (15)
 
 % Proposition 4
 F    = sigma_11_sqrt*E*sigma_11_sqrt;                                           % (29)
@@ -74,23 +73,30 @@ ck   = c+trace(F)+vk'.*(sigma_11*d)+vk'.^2.*diag(sigma_11*E*sigma_11);          
 dk   = sigma_11_sqrt*(repmat(d,1,N-M)+2*repmat(vk,N-M,1).*(E*sigma_11));        % (26) Matrix with dks in columns
 
 F2 = F*F;
+c = [c0; ck; c_N1];
+d = [d0 dk d_N1];
+psi = 1./(1+dot(d,d))';                                                                                             %(30)
+dFd = dot((d'*F)',d)';
 
-% Proposition 5
-fPsi   = @(v) 1/(1+v'*v);                                                                                   % (30)
-
-J0 = @(u,psi) normcdf(u*sqrt(psi));                                                                         % (35)
-J1 = @(u,v,psi) psi^1.5*(psi*u^2-1)*v'*F*v*normpdf(u*sqrt(psi));                                            % (36)
-J2 = @(u,v,psi) u*psi^1.5*normpdf(u*sqrt(psi))*(2*trace(F2)-4*(1-trace(F))*(psi-psi^2)*v'*F*v+...
-    psi^2*(9+(2-3*u^2)*psi-u^2*(4-u^2)*psi^2)*(v'*F*v)^2-2*psi*(5+(1-2*u^2)*psi)*v'*F2*v);                  % (37)
-
+% Proposition 5 
+J0V = normcdf(c.*sqrt(psi));                                                                                        %(35)   
+J1V = psi.^1.5.*(psi.*c.^2-1).*dFd.*normpdf(c.*sqrt(psi));                                                          %(36)
+J2V = c.*psi.^1.5.*normpdf(c.*sqrt(psi)).*(2*trace(F2)-4*(1-trace(F))*(psi-psi.^2).*dFd+...
+    (psi.^2).*(9+(2-3*c.^2).*psi-c.^2.*(4-c.^2).*psi.^2).*dFd.^2-2*psi.*(5+(1-2*c.^2).*psi).*dot((d'*F2)',d)');     %(37)
+                                                                                                                                         
 % Proposition 4 (price)
-aI = @(u,v,psi) J0(u,psi)+J1(u,v,psi)-0.5*J2(u,v,psi);                                  % (17)
+Ik = J0V+J1V-0.5*J2V;                                                       %(17) 
+V = exp(-r*T+uH0+0.5*vH0^2)*Ik(1:M)-sum(exp(-r*T+uk+0.5*vk.^2)'.*Ik(M+1:end-1))...
+    -K*exp(-r*T)*Ik(end);                                                   %(16)
 
-V = exp(-r*T+uH0+0.5*vH0^2)*aI(c0,d0,fPsi(d0))-K*exp(-r*T)*aI(c_N1,d_N1,fPsi(d_N1));    % (16)
-for i=1:N-M
-    V=V-exp(-r*T+uk(i)+0.5*vk(i)^2)*aI(ck(i),dk(:,i),fPsi(dk(:,i)));                    % (16)
-end
-
+% fPsi = @(v) 1./(1+dot(v,v))';                                                                                                   %(30)
+% J0 = @(u,psi) normcdf(u.*sqrt(psi));                                                                                            %(35)
+% J1 = @(u,v,psi) psi.^1.5.*(psi.*u.^2-1).*dot((v'*F)',v)'.*normpdf(u.*sqrt(psi));                                                %(36)
+% J2 = @(u,v,psi) u.*psi.^1.5.*normpdf(u.*sqrt(psi)).*(2*trace(F2)-4*(1-trace(F))*(psi-psi.^2).*dot((v'*F)',v)'+...
+%     (psi.^2).*(9+(2-3*u.^2).*psi-u.^2.*(4-u.^2).*psi.^2).*dot((v'*F)',v)'.^2-2*psi.*(5+(1-2*u.^2).*psi).*dot((v'*F2)',v)');     %(37)
+% aI = @(u,v,psi) J0(u,psi)+J1(u,v,psi)-0.5*J2(u,v,psi);                          %(17)
+% V = exp(-r*T+uH0+0.5*vH0^2)*aI(c0,d0,fPsi(d0))-sum(exp(-r*T+uk+0.5*vk.^2)'.*aI(ck,dk,fPsi(dk)))...
+%     -K*exp(-r*T)*aI(c_N1,d_N1,fPsi(d_N1));                                      %(16)
 
 end
 

@@ -3,6 +3,7 @@
 % November 2015
 
 %clear all;
+format long;
 
 str_now = char(date);
 diary(['data/output_', str_now, '.txt']);
@@ -10,7 +11,7 @@ diary(['data/output_', str_now, '.txt']);
 seed = 133781;
 rng(seed);
 
-nPaths = 1e8;
+nPaths = 1e4;
 nSteps = 1e4;
 r = 0.05;
 
