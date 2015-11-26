@@ -40,10 +40,10 @@ counter = 0;
 
 for i = 1:nSamples
     
-    if(mod(i,percentage)==0)
-        counter = counter + 10;
-        fprintf('%d%% completed..\n',counter)
-    end
+%     if(mod(i,percentage)==0)
+%         counter = counter + 10;
+%         fprintf('%d%% completed..\n',counter)
+%     end
     
     S = zeros(N,nSteps+1);
     S(:,1) = S0';

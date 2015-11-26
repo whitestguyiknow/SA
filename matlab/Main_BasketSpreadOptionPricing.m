@@ -31,8 +31,9 @@ rho = [1 0.2 0.8; 0.2 1 0.4; 0.8 0.4 1];
 
 V_sb1 = priceBasketSpreadOption_SecondOrderBoundaryApprox(K,r,T,e,a,S0,sigma,rho)
 V_HybMMICUB1 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-6)
+tic
 V_mc1 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
-
+toc
 
 %% Numerical Experiments from Pricing and Hedging Asian Basket Spread Options
 K = 15;

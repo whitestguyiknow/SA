@@ -48,7 +48,6 @@ sigma_11 = rho(~I,~I);
 sigma_11_inv_sigma_10 = sigma_11\sigma_10;
 [sigma_11_EV, sigma_11_Eval] = eig(sigma_11); 
 sigma_11_sqrt = sigma_11_EV*sqrt(sigma_11_Eval)*sigma_11_EV; 
-%sigma_11_sqrt = chol(sigma_11); %or choletsky decomposition or sqrt????? 
 
 % Proposition 1
 sigma_xy = 1-sigma_10'*sigma_11_inv_sigma_10;
@@ -72,9 +71,10 @@ d0   = sigma_11_sqrt*(d+2*vH0*E*sigma_10);                                      
 ck   = c+trace(F)+vk'.*(sigma_11*d)+vk'.^2.*diag(sigma_11*E*sigma_11);          % (25)
 dk   = sigma_11_sqrt*(repmat(d,1,N-M)+2*repmat(vk,N-M,1).*(E*sigma_11));        % (26) 
 
-F2 = F*F;
 c = [c0; ck; c_N1];
-d = [d0 dk d_N1];                                                               % Matrix with dks in columns
+d = [d0 dk d_N1];   % Matrix with dks in columns
+
+F2 = F*F;
 psi = 1./(1+dot(d,d))';                                                                                             % (30)
 dFd = dot((d'*F)',d)';
 
