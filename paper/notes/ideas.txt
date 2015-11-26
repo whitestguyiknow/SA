@@ -15,3 +15,6 @@
 ## 23.Nov
 -use Proposition commands and others in latex (like other SA)
 
+##25.Nov
+-matlab uses chol algorithm in eig(A) for symmetric matrices
+
