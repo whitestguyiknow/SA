@@ -15,6 +15,10 @@ nPaths = 1e4;
 nSteps = 1e4;
 r = 0.05;
 
+%% Market Params
+
+[eG,aG,S0G,sigmaG,rhoG] = generateMarketParams(5,1,'charged','constant',0.4,'descending',0);
+
 %% Numerical Experiments from Mulit-asset spread Option Pricing
 K = 30;
 T = 0.25;
