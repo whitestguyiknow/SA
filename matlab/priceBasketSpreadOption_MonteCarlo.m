@@ -38,19 +38,23 @@ v = zeros(1,nSamples);
 percentage = floor(nSamples/10);
 counter = 0;
 
+% precompute
+rdt = r*dt;
+sigma2 = sigma'.^2;
+
 for i = 1:nSamples
     
-%     if(mod(i,percentage)==0)
-%         counter = counter + 10;
-%         fprintf('%d%% completed..\n',counter)
-%     end
+    if(mod(i,percentage)==0)
+        counter = counter + 10;
+        fprintf('%d%% completed..\n',counter)
+    end
     
     S = zeros(N,nSteps+1);
     S(:,1) = S0';
     B = mvnrnd(mu, rho*dt, nSteps)';
     for j=1:nSteps
-        S(:,j+1) = S(:,j)+S(:,j)*r*dt+S(:,j).*sigma'.*B(:,j)+...
-            0.5*S(:,j).*sigma'.^2.*(B(:,j).^2-dt);
+        S(:,j+1) = S(:,j)+S(:,j)*rdt+S(:,j).*sigma'.*B(:,j)+...
+            0.5*S(:,j).*sigma2.*(B(:,j).^2-dt);
     end
     
     v(i) = max(sum((S(:,end)'.*e.*a))-K,0);

@@ -189,7 +189,10 @@ $$I_{N+1}=\int_{\mathbb{R}^N}\phi(y;0,\Sigma_{11})\Phi\big(A(y)\big)dy,$$
 where $e_k$ is the unit column vector (0,...,0,1,0,...,0)' with 1 at the k-th position, and
 $$A(y)=\frac{\mu_{x|y}-x(y)}{\sqrt{\Sigma_{x|y}}},$$
 with
-$$\mu_{x|y}=\Sigma_{10}'\Sigma_{11}^{-1}y, \Sigma_{x|y}=1-\Sigma_{10}'\Sigma_{11}^{-1}\Sigma_{10}.$$
+\begin{equation}
+\ref{eq:inv}
+\mu_{x|y}=\Sigma_{10}'\Sigma_{11}^{-1}y, \quad \Sigma_{x|y}=1-\Sigma_{10}'\Sigma_{11}^{-1}\Sigma_{10}.
+\end{equation}
 \end{prop}
 
 In proposition \ref{prop:price}, $\Phi(z)$ stands for the one-dimensional cumulative distribution function. Note that I already plugged in the approximated mean $\mu_0^H$ and variance $\sigma_0^H$ of the random variable $H_0(t)$ instead of the mean and variance of $S_0(t)$. From now one I'll be using the approximations $\mu_0^H$ and $\sigma_0^H$.\\
@@ -341,9 +344,11 @@ In the presentation of the HybMMICUP method I also omitted the weights of the as
 \newpage
 \section{Numerical Analysis}
 \label{sec:na}
-This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method.
+This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations of the two methods
+\textit{priceBasketSpreadOption_SecondOrderBoundaryApprox.m} and \textit{priceBasketSpreadOption_HybMMICUB.m}.
 \subsection{SOB Method}
-
+There are four remarkable operations in the SOB implementaion. First, there are mainly matrix vector operations which have a computational complexity of $\mathbb(n^2)$ (ignoring scalar operations). Second, in order to compute the values
+$mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv}.
 \subsection{HybMMICUP}
 
 \newpage
