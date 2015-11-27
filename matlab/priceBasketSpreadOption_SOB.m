@@ -1,4 +1,4 @@
-function [V] = priceBasketSpreadOption_SecondOrderBoundaryApprox(K, r, T, e, a, S0, sigma, rho)
+function [V] = priceBasketSpreadOption_SOB(K, r, T, e, a, S0, sigma, rho)
 %% Pricing Function for Basket-Spread options using Second Order boundary Approximation
 %% Based on Multi-asset Spread Option Pricing and Hedging (S.Deng, M.Li, J. Zhou; 2007)
 

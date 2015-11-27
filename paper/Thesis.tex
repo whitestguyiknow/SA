@@ -190,7 +190,7 @@ where $e_k$ is the unit column vector (0,...,0,1,0,...,0)' with 1 at the k-th po
 $$A(y)=\frac{\mu_{x|y}-x(y)}{\sqrt{\Sigma_{x|y}}},$$
 with
 \begin{equation}
-\ref{eq:inv}
+\label{eq:inv}
 \mu_{x|y}=\Sigma_{10}'\Sigma_{11}^{-1}y, \quad \Sigma_{x|y}=1-\Sigma_{10}'\Sigma_{11}^{-1}\Sigma_{10}.
 \end{equation}
 \end{prop}
@@ -252,15 +252,34 @@ with
 \label{eq:p}
 P=P(v)\equiv(I+vv')^{-1/2},
 \end{equation}
-$$\lambda=\lambda(u,v)\equiv u^2v'P^2FP^2v+tr(PFP)-tr(F),$$
+\begin{equation}
+\lambda=\lambda(u,v)\equiv u^2v'P^2FP^2v+tr(PFP)-tr(F),
+\end{equation}
 where tr stands for the trace operator of a matrix. The scalars $c_i$, vectors $d_i$, and matrix $F$ are given by
-$$c_0=c+tr(F)+\sigma_0^H\sqrt{\Sigma_{x|y}}+\sigma_0^H\Sigma_{10}'d+{\sigma_0^H}^2\Sigma_{10}'E\Sigma_{10},$$
-$$d_0=\Sigma_{11}^{1/2}(d+2\sigma_0^HE\Sigma_{10}),$$
-$$c_k=c+tr(F)+\sigma_ke_k'\Sigma_{11}d+\sigma_k^2e_k'\Sigma_{11}E\Sigma_{11}e_k,k=0,1,...,N,$$
-$$d_k=\Sigma_{11}^{1/2}(d+2\sigma_kE\Sigma_{11}e_k),k=1,2,...,N,$$
-$$c_{N+1}=c+tr(F),$$
-$$d_{N+1}=\Sigma_{11}^{1/2}d,$$
-$$F=\Sigma_{11}^{1/2}E\Sigma_{11}^{1/2},$$
+\begin{equation}
+c_0=c+tr(F)+\sigma_0^H\sqrt{\Sigma_{x|y}}+\sigma_0^H\Sigma_{10}'d+{\sigma_0^H}^2\Sigma_{10}'E\Sigma_{10},
+\end{equation}
+\begin{equation}
+\label{eq:d0}
+d_0=\Sigma_{11}^{1/2}(d+2\sigma_0^HE\Sigma_{10}),
+\end{equation}
+\begin{equation}
+c_k=c+tr(F)+\sigma_ke_k'\Sigma_{11}d+\sigma_k^2e_k'\Sigma_{11}E\Sigma_{11}e_k,k=0,1,...,N,
+\end{equation}
+\begin{equation}
+\label{eq:dk}
+d_k=\Sigma_{11}^{1/2}(d+2\sigma_kE\Sigma_{11}e_k),k=1,2,...,N,
+\end{equation}
+\begin{equation}
+c_{N+1}=c+tr(F),
+\end{equation}
+\begin{equation}
+\label{eq:dN1}
+d_{N+1}=\Sigma_{11}^{1/2}d,
+\end{equation}
+\begin{equation}
+F=\Sigma_{11}^{1/2}E\Sigma_{11}^{1/2},
+\end{equation}
 with $\Sigma_{x|y}$ given in Proposition \ref{prop:price}.
 
 \end{prop}
@@ -344,12 +363,12 @@ In the presentation of the HybMMICUP method I also omitted the weights of the as
 \newpage
 \section{Numerical Analysis}
 \label{sec:na}
-This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations of the two methods
-\textit{priceBasketSpreadOption_SecondOrderBoundaryApprox.m} and \textit{priceBasketSpreadOption_HybMMICUB.m}.
+This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations \textit{priceBasketSpreadOption\_SOB.m} and \textit{priceBasketSpreadOption\_HybMMICUB.m}.
 \subsection{SOB Method}
-There are four remarkable operations in the SOB implementaion. First, there are mainly matrix vector operations which have a computational complexity of $\mathbb(n^2)$ (ignoring scalar operations). Second, in order to compute the values
-$mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv}.
+There are four remarkable operations in the SOB implementaion. First, there are mainly matrix-vector operations which have a computational complexity of $\mathcal{O}(n^2)$ (ignoring scalar operations). Second, in order to compute the values $\mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv} I preferably solve the linear system $\Sigma_{10} = \Sigma_{11}x$ instead of inverting the matrix $\Sigma_{11}$. In this case solving a system of linear equations has a complexity of $\mathcal{O}(n^3)$. Third, to compute $\Sigma_{11}^{1/2}$ required for all $d$'s (equation $\ref{eq:d0}, \ref{eq:dk}, \ref{eq:dN1}$) I compute it's eigenvalues and eigenvectors for which MATLAB choses the Cholesky decomposition having complexity $\mathcal{O}(n^3)$. Last, there are a couple of matrix-matrix multiplications in the code with complexity of $\mathcal{O}(n^3)$ also. All in all, the SOB method has a compuational complexity of $\mathcal{O}(n^3)$ up to some constant, but apart from the computational costly operations this method is very straight forward to implement and all operations can be vectorized. Runtime plots will follow up in subsection \ref{rt}.
 \subsection{HybMMICUP}
+\subsection{Runtime}
+\label{rt}
 
 \newpage
 \section{Results and Future Work}
