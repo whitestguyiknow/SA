@@ -1,5 +1,5 @@
 %% Basekt Spread Option Pricing
-% Author: Daniel W??lchli
+% Author: Daniel Waelchli
 % November 2015
 
 format long;
@@ -10,7 +10,7 @@ diary(['data/output_', str_now, '.txt']);
 seed = 133781;
 rng(seed);
 
-nPaths = 1e6;
+nPaths = 1e5;
 nSteps = 1e3;
 r = 0.05;
 

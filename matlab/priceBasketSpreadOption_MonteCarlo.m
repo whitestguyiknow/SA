@@ -35,34 +35,37 @@ dt = T/nSteps;
 
 v = zeros(1,nSamples);
 
-percentage = floor(nSamples/10);
-counter = 0;
+%percentage = floor(nSamples/10);
+%counter = 0;
 
 % precompute
 rdt = r*dt;
-sigma2 = sigma'.^2;
+%sigma2 = sigma'.^2;
 
-for i = 1:nSamples
+%for i = 1:nSamples
     
-    if(mod(i,percentage)==0)
-        counter = counter + 10;
-        fprintf('%d%% completed..\n',counter)
-    end
+%    if(mod(i,percentage)==0)
+%        counter = counter + 10;
+%        fprintf('%d%% completed..\n',counter)
+%    end
     
-    S = zeros(N,nSteps+1);
-    S(:,1) = S0';
-    B = mvnrnd(mu, rho*dt, nSteps)';
+    S = zeros(N*nSamples,nSteps+1);
+    S(:,1) = repmat(S0',nSamples,1);
+    sig = repmat(sigma',nSamples,1);
+    W = mvnrnd(mu, rho*dt, nSamples*nSteps)';
+    B = reshape(W,[N*nSamples,nSteps]);
     for j=1:nSteps
-        S(:,j+1) = S(:,j)+S(:,j)*rdt+S(:,j).*sigma'.*B(:,j)+...
-            0.5*S(:,j).*sigma2.*(B(:,j).^2-dt);
+        S(:,j+1) = S(:,j)+S(:,j)*rdt+S(:,j).*sig.*B(:,j);
     end
     
-    v(i) = max(sum((S(:,end)'.*e.*a))-K,0);
+    %v(i) = max(sum((S(:,end)'.*e.*a))-K,0);
     
-end
+%end
 
 fprintf('%d standard error\n',std(v))
-V = exp(-r*T)*mean(v);
+
+ea = repmat(e'.*a',nSamples,1);
+V = exp(-r*T)*mean(S(:,end).*ea);
 
 end
 

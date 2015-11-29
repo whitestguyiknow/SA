@@ -21,8 +21,8 @@ assert(strcmp(type_S0,'charged')|strcmp(type_S0,'descending'),...
     'type_S0 must be of type "weighted" or "descneding"');
 assert(strcmp(type_sigma,'constant')|strcmp(type_sigma,'descending'),...
     'type_sigma must be of type "constant" or "descending"');
-assert(strcmp(type_rho,'constant')|strcmp(type_rho,'descending'),...
-    'type_rho must be of type "constant" or "descending"');
+assert(strcmp(type_rho,'constant')|strcmp(type_rho,'alternating'),...
+    'type_rho must be of type "constant" or "alternating"');
 assert(abs(r)<1,'abs(r) must be smaller 1');
 
 %% Create Market Params
@@ -45,13 +45,13 @@ end
 
 switch type_rho
     case 'constant'
-        rho = r*ones(1,N);
+        rho = r*ones(N,N);
         rho(eye(size(rho))~=0)=1; 
-    case 'descending'
-        m1 = repmat(1:N,N,1)+repmat((1:N)',1,N);
-        m2 = median(m1(:))-m1;
-        rho = m2/max(m2(:));
-        rho(eye(size(rho))~=0)=1; 
+    case 'alternating'
+        rho = repmat(1:N,N,1)+repmat((1:N)',1,N);
+        rho(mod(rho,2)==0)=s;
+        rho(mod(rho,2)==1)=s;
+        rho(eye(size(rho))~=0)=1;
 end
 
 

@@ -344,6 +344,7 @@ Consider the following stop-loss premium
 $$\mathbb{E}[(e^{\mu_1+\sigma_1X_1}-e^{\mu_2+\sigma_2X_2}-K)^+],$$
 with $X_1$, $X_2$ two correlated standard normal random variables. The comonotonic improved upper bound of this spread is given by
 \begin{equation}
+\label{eq:ints}
 \begin{split}
 V \simeq &\sum_{i=1}^2\epsilon_i\int_0^1e^{\mu_i+A_i(u)+1/2Y_i^2}\Phi\big(Y_i-\Phi^{-1}\big(F_{\mathbb{S}^{ic}|U=u}(K)\big)\big)du\\
 	&-K\big(1-F_{\mathbb{S}^{ic}}(K)\big),
@@ -351,11 +352,16 @@ V \simeq &\sum_{i=1}^2\epsilon_i\int_0^1e^{\mu_i+A_i(u)+1/2Y_i^2}\Phi\big(Y_i-\P
 \end{equation}
 where $\epsilon_1=1$ and $\epsilon_2=-1$, and where $F_{\mathbb{S}^{ic}|U=u}$ can be found by solving
 \begin{equation}
+\label{eq:fzero}
 \sum_{i=1}^2\epsilon_ie^{\mu_i+A_i(u)+Y_i\Phi^{-1}(F_{\mathbb{S}^{ic}|U=u}(K))}=K,
 \end{equation}
 with, for $\gamma_i$ denoting the correlation between $X_i$ and the conditioning variable $\Lambda \stackrel{d}{=} \mathbb{E}[\Lambda]+\sigma_{\Lambda}\Phi^{-1}(U)$
-$$A_i(u)=\gamma_i\sigma_i\Phi^{-1}(u),\quad Y_i=\epsilon_i\sigma_i\sqrt{1-\gamma_i^2}, \quad F_{\mathbb{S}^{ic}}(K) = \int_0^1F_{\mathbb{S}^{ic}|U=u}(K)du.$$
+\begin{equation*}
+A_i(u)=\gamma_i\sigma_i\Phi^{-1}(u),\quad Y_i=\epsilon_i\sigma_i\sqrt{1-\gamma_i^2}, \quad F_{\mathbb{S}^{ic}}(K) = \int_0^1F_{\mathbb{S}^{ic}|U=u}(K)du.
+\end{equation*}
 \end{prop}
+The corelation coefficient $\gamma_i$ is calculated as follows:
+$$\gamma_i = \frac{e^{\mu_i}\sigma_i+e^{\mu_j}\sigma_j\rho}{\sqrt{e^{2\mu_1}\sigma_1^2+2e^{\mu_1+\mu_2}\sigma_1\sigma_2+e^{2\mu_2}\sigma_2^2}}.$$
 \begin{remark}
 In the presentation of the HybMMICUP method I also omitted the weights of the assets as they can be incorporated in the price of each asset how indicated in subsection \ref{sec:ms}.
 \end{remark}
@@ -367,6 +373,14 @@ This section enlightens the computational bottlenecks, such as complexity and in
 \subsection{SOB Method}
 There are four remarkable operations in the SOB implementaion. First, there are mainly matrix-vector operations which have a computational complexity of $\mathcal{O}(n^2)$ (ignoring scalar operations). Second, in order to compute the values $\mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv} I preferably solve the linear system $\Sigma_{10} = \Sigma_{11}x$ instead of inverting the matrix $\Sigma_{11}$. In this case solving a system of linear equations has a complexity of $\mathcal{O}(n^3)$. Third, to compute $\Sigma_{11}^{1/2}$ required for all $d$'s (equation $\ref{eq:d0}, \ref{eq:dk}, \ref{eq:dN1}$) I compute it's eigenvalues and eigenvectors for which MATLAB choses the Cholesky decomposition having complexity $\mathcal{O}(n^3)$. Last, there are a couple of matrix-matrix multiplications in the code with complexity of $\mathcal{O}(n^3)$ also. All in all, the SOB method has a compuational complexity of $\mathcal{O}(n^3)$ up to some constant, but apart from the computational costly operations this method is very straight forward to implement and all operations can be vectorized. Runtime plots will follow up in subsection \ref{rt}.
 \subsection{HybMMICUP}
+This subsection refers to my implementation \textit{priceBasketSpreadOption\_HybMMICUB.m}. At first sight, there are few computational costly operations involving matrix multiplications. But the complexity of the procedure lies in the two nested subroutines which are needed to evaluate equation \ref{eq:ints}. The eqaution includes three integrals (one of it to deternine $F_{\mathbb{S}^{ic}}(K)$) for which in each discretization step $\delta u$ one numerically needs so solve equation \ref{eq:fzero} in order to determine $F_{\mathbb{S}^{ic}|U=u}(K)$. Therefore I need a reliable integration scheme to find the improved comontonic upper bound. To find $F_{\mathbb{S}^{ic}|U=u}(K)$ I first use the zero finding subroutine \textit{fzero} and apply it to the function
+\begin{equation}
+\label{eq:fx}
+f(x,u) = \sum_{i=1}^2\epsilon_ie^{\mu_i+A_i(u)+Y_ix}-K, \quad u\in(0,1)
+\end{equation}
+where $x = \Phi^{-1}(F_{\mathbb{S}^{ic}|U=u})$. In a second step I calculate $F_{\mathbb{S}^{ic}|U=u}=\Phi(x)$. Experiments have shown that splitting up the calculation provides stability while finding $F_{\mathbb{S}^{ic}|U=u}$. 
+The following plot (??) shows $f(x,u)$ (\ref{eq:fx}) for different types of scenario. Indeed $f(x)$ is a monotonic function such that \textit{fzero} is able to find a zero for given function. Denote that f(x) is not defined for $u=1$ and for $u=0$ there exists no zero as $f(x,0)=-K$. This poses a problem for the integrals which are defined on $u\in[0,1]$. To avoid this problem I limit the integration intervall to $u\in[\delta u,1-\delta u],\; \delta u \rightarrow 0.$\\
+Plot (??) shows the two integrands in equation \ref{eq:ints}. Because the curvature of the integrand strongly depends on $u$ I chose to use a (recursive) adaptive Simpson's method as my numerical integration procedure. A
 \subsection{Runtime}
 \label{rt}
 
