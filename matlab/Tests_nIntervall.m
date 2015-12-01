@@ -24,13 +24,13 @@ t21 = zeros(1,M);
 t22 = zeros(1,M);
 for i=1:M
 tic;
-V20(i) = priceBasketSpreadOption_HybMMICUB2(K,r,T,e_0,a_0,S0_0,sigma_0,rho_0,N(i));
+V20(i) = priceBasketSpreadOptionHybMMICUB2(K,r,T,e_0,a_0,S0_0,sigma_0,rho_0,N(i));
 t20(i) = toc;
 tic;
-V21(i) = priceBasketSpreadOption_HybMMICUB2(K,r,T,e_1,a_1,S0_1,sigma_1,rho_1,N(i));
+V21(i) = priceBasketSpreadOptionHybMMICUB2(K,r,T,e_1,a_1,S0_1,sigma_1,rho_1,N(i));
 t21(i) = toc;
 tic;
-V22(i) = priceBasketSpreadOption_HybMMICUB2(K,r,T,e_2,a_2,S0_2,sigma_2,rho_2,N(i));
+V22(i) = priceBasketSpreadOptionHybMMICUB2(K,r,T,e_2,a_2,S0_2,sigma_2,rho_2,N(i));
 t22(i) = toc;
 end
 

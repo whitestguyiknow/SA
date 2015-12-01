@@ -16,16 +16,16 @@ for i=1:M
 [e_C,a_C,S0_C,sigma_C,rho_C] = generateMarketParams(N(i),N(i)/2,'charged','constant',0.4,'constant',0.3);
 [e_DA,a_DA,S0_DA,sigma_DA,rho_DA] = generateMarketParams(N(i),N(i)/2,'charged','descending',0.4,'alternating',0.3);
 tic
-priceBasketSpreadOption_HybMMICUB(K,r,T,e_C,a_C,S0_C,sigma_C,rho_C,epsilon);
+priceBasketSpreadOptionHybMMICUB(K,r,T,e_C,a_C,S0_C,sigma_C,rho_C,epsilon);
 tH(1,i) = toc;
 tic
-priceBasketSpreadOption_HybMMICUB(K,r,T,e_DA,a_DA,S0_DA,sigma_DA,rho_DA,epsilon);
+priceBasketSpreadOptionHybMMICUB(K,r,T,e_DA,a_DA,S0_DA,sigma_DA,rho_DA,epsilon);
 tH(2,i) = toc;
 tic
-priceBasketSpreadOption_SOB(K,r,T,e_C,a_C,S0_C,sigma_C,rho_C);
+priceBasketSpreadOptionSOB(K,r,T,e_C,a_C,S0_C,sigma_C,rho_C);
 tS(1,i) = toc;
 tic
-priceBasketSpreadOption_SOB(K,r,T,e_DA,a_DA,S0_DA,sigma_DA,rho_DA);
+priceBasketSpreadOptionSOB(K,r,T,e_DA,a_DA,S0_DA,sigma_DA,rho_DA);
 tS(2,i) = toc;
 end
 

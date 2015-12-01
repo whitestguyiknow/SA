@@ -1,4 +1,4 @@
-function [V] = priceBasketSpreadOption_MonteCarlo(K, r, T, e, a, S0, sigma, rho, nSamples, nSteps)
+function [V] = priceBasketSpreadOptionMonteCarlo(K, r, T, e, a, S0, sigma, rho, nSamples, nSteps)
 %% Pricing Function for Basket-Spread options using Monte Carlo Simulation and Milstein Method
 % Author: Daniel W??lchli
 % November 2015

@@ -1,8 +1,7 @@
-function [V] = priceBasketSpreadOption_HybMMICUB2(K, r, T, e, a, S0, sigma, rho, nIntervall)
+function [V] = priceBasketSpreadOptionHybMMICUB(K, r, T, e, a, S0, sigma, rho, eps)
 %% Pricing Function for Basket-Spread options using Hybrid Moment Matching associated with ICUB
 %% Based on Pricing and hedging Asian basket spread options (G.Deelstra, A.Petkovic, M.Vanmaele; 2010)
-% Using Trapezoidal Rule
-% Dismissed Implementation
+% Using adaptive Simpson's rule
 
 % Author: Daniel Waelchli
 % November 2015
@@ -16,7 +15,7 @@ function [V] = priceBasketSpreadOption_HybMMICUB2(K, r, T, e, a, S0, sigma, rho,
 % S0:           initial value of asset
 % sigma:        volatility
 % rho:          correlation
-% nIntervall:   number of intervalls used in (0,1) for trapezoidal rule 
+% eps:          max error on intervall in Adaprive Simpson's Integration
 
 %% Assertion
 N = length(e);
@@ -63,20 +62,71 @@ A1 = @(u) gamma1*sqrt(var1)*norminv(u,0,1);
 A2 = @(u) gamma2*sqrt(var2)*norminv(u,0,1);
 
 dx=1e-12;
-u=linspace(dx,1-dx,nIntervall);
-fu = zeros(1,nIntervall);
-for i=1:nIntervall
-    fu(i)=fsicu(u(i),u1,A1,Y1,u2,A2,Y2,K,0.5);
-end
-FSICKN = sum(normcdf(fu))/nIntervall;
-IN1 = sum(exp(u1+A1(u)+0.5*Y1^2).*normcdf(Y1-fu))/nIntervall;
-IN2 = sum(exp(u2+A2(u)+0.5*Y2^2).*normcdf(Y2-fu))/nIntervall;
 
-V=IN1-IN2-K*(1-FSICKN);
+fsic = @(x) fsicu(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
+[FSICKN] = adaptive_simpson_rule(fsic,dx,1-dx,eps,simpsons_rule(fsic,dx,1-dx),1);
+fprintf('Integration intervalls used in FSICK: %d\n',FSICKN(2))
+%[FSICKN] = trapezoidal_rule(fsic,0,1,eps);
+ifsic_1 = @(x) integrandFsicu_1(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
+ifsic_2 = @(x) integrandFsicu_2(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
+
+[IN1] = adaptive_simpson_rule(ifsic_1,dx,1-dx,eps,simpsons_rule(ifsic_1,dx,1-dx),1);
+fprintf('Integration intervalls used in I1: %d\n',IN1(2))
+[IN2] = adaptive_simpson_rule(ifsic_2,dx,1-dx,eps,simpsons_rule(ifsic_2,dx,1-dx),1);
+fprintf('Integration intervalls used in I2: %d\n',IN2(2))
+
+%[IN1] = trapezoidal_rule(ifsic_1,0,1,eps);
+%[IN2] = trapezoidal_rule(ifsic_2,0,1,eps);
+
+V=IN1(1)-IN2(1)-K*(1-FSICKN(1));
 end
 
 function [F] = fsicu(u,u1,A1,Y1,u2,A2,Y2,K,x0)
     % Find FSU(K)
     f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
     F = fzero(f,x0);
+    F = normcdf(F);
+end
+
+function [I1] = integrandFsicu_1(u,u1,A1,Y1,u2,A2,Y2,K,x0)
+    % Integral in (15) for i=1
+    f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
+    F = fzero(f,x0);
+    I1 = exp(u1+A1(u)+0.5*Y1^2)*normcdf(Y1-F);
+end
+
+function [I2] = integrandFsicu_2(u,u1,A1,Y1,u2,A2,Y2,K,x0)
+    % Integral in (15) for i=2
+    f = @(x) exp(u1+A1(u)+Y1*x)-exp(u2+A2(u)+Y2*x)-K;
+    F = fzero(f,x0);
+    I2 = exp(u2+A2(u)+0.5*Y2^2)*normcdf(Y2-F);
+end
+
+function [I] = simpsons_rule(f,a,b)
+    % Simpson's Rule
+    c = (a+b)/2;
+    h = (b-a)/6;
+    I = h*(f(a)+4.0*f(c)+f(b));
+end
+
+function [IN] = adaptive_simpson_rule(f,a,b,eps,base,N)
+    % Recursive Adavtibe Simpson's Rule
+    c = (a+b)/2;
+    l = simpsons_rule(f,a,c);
+    r = simpsons_rule(f,c,b);
+    if (abs(l + r - base) <= 15*eps)
+        IN = [l+r+(l+r-base)/15.0, N];
+    else
+        IN = adaptive_simpson_rule(f,a,c,eps/2.0,l,N+1) + adaptive_simpson_rule(f,c,b,eps/2.0,r,N+1);
+    end
+end
+
+function [I] = trapezoidal_rule(f,a,b,N)
+    x = linspace(a,b,N);
+    I = 0;
+    for i = 2:N-1
+        I = I + f(x(i));
+    end
+    I = f(x(2))+f(x(end-1));
+    I = I*(b-a)/N;
 end

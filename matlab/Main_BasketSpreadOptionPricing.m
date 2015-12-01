@@ -28,10 +28,10 @@ S0 = [150 60 50];
 sigma = [0.3 0.3 0.3];
 rho = [1 0.2 0.8; 0.2 1 0.4; 0.8 0.4 1];
 
-V_sb1 = priceBasketSpreadOption_SOB(K,r,T,e,a,S0,sigma,rho)
-V_HybMMICUB1 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-6)
+V_sb1 = priceBasketSpreadOptionSOB(K,r,T,e,a,S0,sigma,rho)
+V_HybMMICUB1 = priceBasketSpreadOptionHybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-6)
 tic
-V_mc1 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
+V_mc1 = priceBasketSpreadOptionMonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
 toc
 
 %% Numerical Experiments from Pricing and Hedging Asian Basket Spread Options
@@ -43,8 +43,8 @@ a = [1 1 1];
 S0 = [100 24 46];
 sigma = [0.4 0.22 0.3];
 rho = [1 0.17 0.91; 0.17 1 0.41; 0.91 0.41 1];
-V_sb2 = priceBasketSpreadOption_SOB(K,r,T,e,a,S0,sigma,rho)
-V_HybMMICUB2 = priceBasketSpreadOption_HybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-5)
-V_mc2 = priceBasketSpreadOption_MonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
+V_sb2 = priceBasketSpreadOptionSOB(K,r,T,e,a,S0,sigma,rho)
+V_HybMMICUB2 = priceBasketSpreadOptionHybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-5)
+V_mc2 = priceBasketSpreadOptionMonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
 
 
