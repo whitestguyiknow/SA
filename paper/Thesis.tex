@@ -369,7 +369,7 @@ In the presentation of the HybMMICUP method I also omitted the weights of the as
 \newpage
 \section{Numerical Analysis}
 \label{sec:na}
-This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations \textit{priceBasketSpreadOption\_SOB.m} and \textit{priceBasketSpreadOption\_HybMMICUB.m}.
+This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations \textit{priceBasketSpreadOption\_SOB.m} and \textit{priceBasketSpreadOption\_HybMMICUB.m}. 
 \subsection{SOB Method}
 There are four remarkable operations in the SOB implementaion. First, there are mainly matrix-vector operations which have a computational complexity of $\mathcal{O}(n^2)$ (ignoring scalar operations). Second, in order to compute the values $\mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv} I preferably solve the linear system $\Sigma_{10} = \Sigma_{11}x$ instead of inverting the matrix $\Sigma_{11}$. In this case solving a system of linear equations has a complexity of $\mathcal{O}(n^3)$. Third, to compute $\Sigma_{11}^{1/2}$ required for all $d$'s (equation $\ref{eq:d0}, \ref{eq:dk}, \ref{eq:dN1}$) I compute it's eigenvalues and eigenvectors for which MATLAB choses the Cholesky decomposition having complexity $\mathcal{O}(n^3)$. Last, there are a couple of matrix-matrix multiplications in the code with complexity of $\mathcal{O}(n^3)$ also. All in all, the SOB method has a compuational complexity of $\mathcal{O}(n^3)$ up to some constant, but apart from the computational costly operations this method is very straight forward to implement and all operations can be vectorized. Runtime plots will follow up in subsection \ref{rt}.
 \subsection{HybMMICUP}
@@ -380,7 +380,8 @@ f(x,u) = \sum_{i=1}^2\epsilon_ie^{\mu_i+A_i(u)+Y_ix}-K, \quad u\in(0,1)
 \end{equation}
 where $x = \Phi^{-1}(F_{\mathbb{S}^{ic}|U=u})$. In a second step I calculate $F_{\mathbb{S}^{ic}|U=u}=\Phi(x)$. Experiments have shown that splitting up the calculation provides stability while finding $F_{\mathbb{S}^{ic}|U=u}$. 
 The following plot (??) shows $f(x,u)$ (\ref{eq:fx}) for different types of scenario. Indeed $f(x)$ is a monotonic function such that \textit{fzero} is able to find a zero for given function. Denote that f(x) is not defined for $u=1$ and for $u=0$ there exists no zero as $f(x,0)=-K$. This poses a problem for the integrals which are defined on $u\in[0,1]$. To avoid this problem I limit the integration intervall to $u\in[\delta u,1-\delta u],\; \delta u \rightarrow 0.$\\
-Plot (??) shows the two integrands in equation \ref{eq:ints}. Because the curvature of the integrand strongly depends on $u$ I chose to use a (recursive) adaptive Simpson's method as my numerical integration procedure, which is outperforming an integration scheme with equidistant integration intervals. Also the MATLAB routine \textit{integral} is not applicable since we need to find $F_{\mathbb{S}^{ic}}(K)$. The adaptive Simpson's rule repeatedly splits an integral $I = \int_a^b g(x) dx$ in two subintervalls $ I_l = \int_a^{\frac{b-a}{2}} g(x) dx$ and $I_r = \int_{\frac{b-a}{2}}^b g(x) dx$ until the criteria $|I-I_l-I_r| \leq \epsilon$ is met. The integrals are numerically approximated according to the standard Simpson's rule. The accuracy and runtime of the adaptive Simpson's rule strongly depends on the constant $\epsilon$. Based on a performance analysis I set $\epsilon = 10^{-5}$. 
+Plot (??) shows the two integrands in equation \ref{eq:ints}. 
+To solve the integrals I considered two integration techniques, the adaptive Simpson's rule and the rectangle method. The adaptive Simpson's rule repeatedly splits an integral $I = \int_a^b g(x) dx$ in two subintervalls $ I_l = \int_a^{\frac{b-a}{2}} g(x) dx$ and $I_r = \int_{\frac{b-a}{2}}^b g(x) dx$ until the criteria $|I-I_l-I_r| \leq \epsilon$ is met, whereas the integrals are numerically approximated according to the standard Simpson's rule. The rectangle method divides the interval (a,b) into $N$ equal subintervals of length $h=\frac{b-a}{N}$ and approximates the integral by adding up the areas of the $N$ rectangles under the curve. The rectangle method allows to precompute $F_{\mathbb{S}^{ic}|U=u}(K)$ for all subintervals once and reuse it in all three integrals. On the other hand the adaptive Simpson's rule might use less subintervalls in total but possibly it needs to recompute $F_{\mathbb{S}^{ic}|U=u}(K)$ multiple times for the same subintervall. The accuracy and runtime of the two mentioned methods strongly depend on $\epsilon$ and $N$, respectively. A performance analysis based on convergence rate versus computation time shows that the adaptive Simpson's rule is outperforming the rectangle method. Based on my analysis I set $\epsilon = 10^{-5}$. 
 \subsection{Runtime}
 \label{rt}
 
@@ -404,4 +405,8 @@ G. Deelstra, A. Petkovic, M. Vanmaele.
 \end{thebibliography}
 
 \end{document}
+
+
+
+
 

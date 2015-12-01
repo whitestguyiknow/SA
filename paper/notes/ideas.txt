@@ -18,3 +18,6 @@
 ##25.Nov
 -matlab uses chol algorithm in eig(A) for symmetric matrices
 
+##1. Dec
+- interval with one l
+
