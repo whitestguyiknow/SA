@@ -1,4 +1,4 @@
-function [V] = priceBasketSpreadOptionMonteCarlo(K, r, T, e, a, S0, sigma, rho, nSamples, nSteps,M)
+function [V,T] = priceBasketSpreadOptionMonteCarlo(K, r, T, e, a, S0, sigma, rho, nSamples, nSteps,M)
 %% Pricing Function for Basket-Spread options using Monte Carlo Simulation and Milstein Method
 % Author: Daniel W?aelchli
 % November 2015
@@ -15,6 +15,7 @@ function [V] = priceBasketSpreadOptionMonteCarlo(K, r, T, e, a, S0, sigma, rho, 
 % method:       method applied for pricing
 % nSamples:     number of Monte Carlo paths per asset
 % nSteps:       number of steps per path
+% M:            MC repetitions (as matrix sizes are limited)
 
 
 %% Assertion
@@ -29,6 +30,7 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 
 %% Computation
 disp('Price basked-spread option with Monte Carlo simulation..');
+tic
 mu = zeros(1,N);
 dt = T/nSteps;
 
@@ -51,5 +53,6 @@ ea = repmat(e'.*a',nSamples,1);
 v(i,:) = exp(-r*T)*mean(max(repmat(S(:,end).*ea,1,nK)-repmat(K,N*nSamples,1),0));
 end
 V=mean(v);
+T=toc;
 end
 

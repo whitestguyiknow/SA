@@ -1,4 +1,4 @@
-function [V] = priceBasketSpreadOptionHybMMICUB(K, r, T, e, a, S0, sigma, rho, eps)
+function [V,T] = priceBasketSpreadOptionHybMMICUB(K, r, T, e, a, S0, sigma, rho, eps)
 %% Pricing Function for Basket-Spread options using Hybrid Moment Matching associated with ICUB
 %% Based on Pricing and hedging Asian basket spread options (G.Deelstra, A.Petkovic, M.Vanmaele; 2010)
 % Using adaptive Simpson's rule
@@ -30,7 +30,7 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 
 %% Computation
 disp('Price basked-spread option with Hybrid Moment Matching Method associated with ICUB');
-
+tic;
 I = (e==1);
 M = sum(I);
 
@@ -65,20 +65,21 @@ dx=1e-12;
 
 fsic = @(x) fsicu(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 [FSICKN] = adaptive_simpson_rule(fsic,dx,1-dx,eps,simpsons_rule(fsic,dx,1-dx),1);
-fprintf('Integration intervalls used in FSICK: %d\n',FSICKN(2))
+%fprintf('Integration intervalls used in FSICK: %d\n',FSICKN(2))
 %[FSICKN] = trapezoidal_rule(fsic,0,1,eps);
 ifsic_1 = @(x) integrandFsicu_1(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 ifsic_2 = @(x) integrandFsicu_2(x,u1,A1,Y1,u2,A2,Y2,K,0.5);
 
 [IN1] = adaptive_simpson_rule(ifsic_1,dx,1-dx,eps,simpsons_rule(ifsic_1,dx,1-dx),1);
-fprintf('Integration intervalls used in I1: %d\n',IN1(2))
+%fprintf('Integration intervalls used in I1: %d\n',IN1(2))
 [IN2] = adaptive_simpson_rule(ifsic_2,dx,1-dx,eps,simpsons_rule(ifsic_2,dx,1-dx),1);
-fprintf('Integration intervalls used in I2: %d\n',IN2(2))
+%fprintf('Integration intervalls used in I2: %d\n',IN2(2))
 
 %[IN1] = trapezoidal_rule(ifsic_1,0,1,eps);
 %[IN2] = trapezoidal_rule(ifsic_2,0,1,eps);
 
 V=IN1(1)-IN2(1)-K*(1-FSICKN(1));
+T=toc;
 end
 
 function [F] = fsicu(u,u1,A1,Y1,u2,A2,Y2,K,x0)

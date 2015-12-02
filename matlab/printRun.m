@@ -1,4 +1,4 @@
-function [] = printRun(filename,N,nP,type_S0,type_sigma,s,type_rho,rho,r,K,T,seed,nPaths,nSteps,eps,varargin)
+function [] = printRun(filename,N,nP,type_S0,type_sigma,s,type_rho,rho,r,K,T,seed,nPaths,nSteps,M,eps,varargin)
 %% Writing Experiments to file
 
 % Author: Daniel W?aelchli
@@ -16,6 +16,7 @@ function [] = printRun(filename,N,nP,type_S0,type_sigma,s,type_rho,rho,r,K,T,see
 % seed:             seed
 % nSamples:         number of Monte Carlo paths per asset
 % nSteps:           number of steps per path
+% M:                number of MC repetitions
 % varargin:         2dim array of calculated prices & runtime
 
 %% Assertion

@@ -1,4 +1,4 @@
-function [V] = priceBasketSpreadOptionSOB(K, r, T, e, a, S0, sigma, rho)
+function [V,T] = priceBasketSpreadOptionSOB(K, r, T, e, a, S0, sigma, rho)
 %% Pricing Function for Basket-Spread options using Second Order boundary Approximation
 %% Based on Multi-asset Spread Option Pricing and Hedging (S.Deng, M.Li, J. Zhou; 2007)
 
@@ -28,7 +28,7 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 
 %% Computation
 disp('Price basked-spread option with second order boundary approximation');
-
+tic;
 I = (e==1);
 M = sum(I);
 
@@ -97,7 +97,7 @@ V = exp(-r*T+uH0+0.5*vH0^2)*Ik(1)-sum(exp(-r*T+uk+0.5*vk.^2)'.*Ik(2:end-1))...
 % aI = @(u,v,psi) J0(u,psi)+J1(u,v,psi)-0.5*J2(u,v,psi);                          % (17)
 % V = exp(-r*T+uH0+0.5*vH0^2)*aI(c0,d0,fPsi(d0))-sum(exp(-r*T+uk+0.5*vk.^2)'.*aI(ck,dk,fPsi(dk)))...
 %     -K*exp(-r*T)*aI(c_N1,d_N1,fPsi(d_N1));                                      % (16)
-
+T = toc;
 end
 
 
