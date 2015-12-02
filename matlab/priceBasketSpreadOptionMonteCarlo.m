@@ -34,7 +34,7 @@ dt = T/nSteps;
 
 rdt = r*dt;
 
-V = zeros(length(K),M);
+V = zeros(M,length(K));
 for i=1:M
 S = zeros(N*nSamples,nSteps+1);
 S(:,1) = repmat(S0',nSamples,1);
@@ -48,7 +48,7 @@ end
 
 nK = length(K);
 ea = repmat(e'.*a',nSamples,1);
-V(:,i) = exp(-r*T)*mean(max(repmat(S(:,end).*ea,1,nK)-repmat(K,N*nSamples,1),0));
+V(i,:) = exp(-r*T)*mean(max(repmat(S(:,end).*ea,1,nK)-repmat(K,N*nSamples,1),0));
 end
 mean(V)
 end
