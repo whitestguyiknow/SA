@@ -1,5 +1,5 @@
 %% Basekt Spread Option Pricing
-%% Plots for report
+%% Plots for report: f(x) and integrands
 
 % Author: Daniel Waelchli
 % November 2015

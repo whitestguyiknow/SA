@@ -10,41 +10,21 @@ diary(['data/output_', str_now, '.txt']);
 seed = 133781;
 rng(seed);
 
-nPaths = 1e5;
-nSteps = 1e3;
+nPaths = 1e4;
+nSteps = 1e2;
+eps = 1e-5;
 r = 0.05;
 
-%% Market Params
-
-[eG,aG,S0G,sigmaG,rhoG] = generateMarketParams(5,1,'charged','constant',0.4,'descending',0);
-
 %% Numerical Experiments from Mulit-asset spread Option Pricing
-K = 30;
+K = [0 5 10 15 20];
 T = 0.25;
 
-e = [1 -1 -1];
-a = [1 1 1];
-S0 = [150 60 50];
-sigma = [0.3 0.3 0.3];
-rho = [1 0.2 0.8; 0.2 1 0.4; 0.8 0.4 1];
+[e50,a50,S050,sigma50,rho50] = generateMarketParams(5,1,'charged','constant',0.4,'descending',0);
 
-V_sb1 = priceBasketSpreadOptionSOB(K,r,T,e,a,S0,sigma,rho)
-V_HybMMICUB1 = priceBasketSpreadOptionHybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-6)
-tic
-V_mc1 = priceBasketSpreadOptionMonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
-toc
+%Vsob50 = priceBasketSpreadOptionSOB(K(i),r,T,e50,a50,S050,sigma50,rho50)
+%VhybMMICUB50 = priceBasketSpreadOptionHybMMICUB(K(i),r,T,e50,a50,S050,sigma50,rho50,eps)
+Vmc50 = priceBasketSpreadOptionMonteCarlo(K,r,T,e50,a50,S050,sigma50,rho50,nPaths,nSteps)
 
-%% Numerical Experiments from Pricing and Hedging Asian Basket Spread Options
-K = 15;
-T = 1;
 
-e = [1 -1 -1];
-a = [1 1 1];
-S0 = [100 24 46];
-sigma = [0.4 0.22 0.3];
-rho = [1 0.17 0.91; 0.17 1 0.41; 0.91 0.41 1];
-V_sb2 = priceBasketSpreadOptionSOB(K,r,T,e,a,S0,sigma,rho)
-V_HybMMICUB2 = priceBasketSpreadOptionHybMMICUB(K,r,T,e,a,S0,sigma,rho,1e-5)
-V_mc2 = priceBasketSpreadOptionMonteCarlo(K,r,T,e,a,S0,sigma,rho,nPaths,nSteps)
 
 
