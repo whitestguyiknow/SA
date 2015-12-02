@@ -50,8 +50,8 @@ switch type_rho
         rho(eye(size(rho))~=0)=1; 
     case 'alternating'
         rho = repmat(1:N,N,1)+repmat((1:N)',1,N);
-        rho(mod(rho,2)==0)=s;
-        rho(mod(rho,2)==1)=s;
+        rho(mod(rho,2)==0)=r;
+        rho(mod(rho,2)==1)=r;
         rho(eye(size(rho))~=0)=1;
     case 'descending'
         rho = repmat(1:N,N,1)+repmat((1:N)',1,N);
