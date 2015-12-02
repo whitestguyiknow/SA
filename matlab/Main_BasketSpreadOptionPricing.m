@@ -2,17 +2,21 @@
 % Author: Daniel Waelchli
 % November 2015
 
+clear all;
 format long;
 
-str_now = char(date);
-diary(['data/output_', str_now, '.txt']);
-
+% seed
 seed = 133781;
 rng(seed);
 
+% MC settings
 nPaths = 1e4;
 nSteps = 1e2;
+
+% adaptive Simpson's rule
 eps = 1e-5;
+
+% interest rate
 r = 0.05;
 
 %% Numerical Experiments from Mulit-asset spread Option Pricing
