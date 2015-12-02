@@ -35,24 +35,30 @@ mu = zeros(1,N);
 dt = T/nSteps;
 
 rdt = r*dt;
+ea = e.*a;
+nK = length(K);
 
+sig = repmat(sigma',nSamples,1);
 v = zeros(M,length(K));
+
 for i=1:M
 S = zeros(N*nSamples,nSteps+1);
 S(:,1) = repmat(S0',nSamples,1);
-sig = repmat(sigma',nSamples,1);
+
 W = mvnrnd(mu, rho*dt, nSamples*nSteps)';
 B = reshape(W,[N*nSamples,nSteps]);
-
+vTmp = zeros(nSamples,length(K));
 for j=1:nSteps
     S(:,j+1) = S(:,j)+S(:,j)*rdt+S(:,j).*sig.*B(:,j);
 end
 
-nK = length(K);
-ea = repmat(e'.*a',nSamples,1);
-v(i,:) = exp(-r*T)*mean(max(repmat(S(:,end).*ea,1,nK)-repmat(K,N*nSamples,1),0));
+for k=1:nSamples
+    vTmp(k,:) = max(repmat(ea*S(1+(k-1)*N:k*N,end),1,nK)-K,zeros(1,nK));
 end
-V=mean(v);
+v(i,:) = mean(vTmp);
+clear S W B vTmp %prevents cluster from crashing
+end
+V=exp(-r*T)*mean(v);
 T=toc;
 end
 

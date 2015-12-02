@@ -20,14 +20,15 @@ function [] = printRun(filename,N,nP,type_S0,type_sigma,s,type_rho,rho,r,K,T,see
 % varargin:         2dim array of calculated prices & runtime
 
 %% Assertion
-M = length(varargin);
-assert(mod(M,3)==0,'number of varargin must be a multiple of 3 (requesting method, prices and timings)');
+l = length(varargin);
+assert(mod(l,3)==0,'number of varargin must be a multiple of 3 (requesting method, prices and timings)');
 
 %% Print Params
 fileID = fopen(filename,'w');
 fprintf(fileID,'%1s %13.0f\r\n' ,'seed:',seed);
 fprintf(fileID,'%1s %11.0f\r\n' ,'nPaths:',nPaths);
 fprintf(fileID,'%1s %11.0f\r\n' ,'nSteps:',nSteps);
+fprintf(fileID,'%1s %16.0f\r\n' ,'M:',M);
 fprintf(fileID,'%1s %10.2e\r\n' ,'epsilon:',eps);
 fprintf(fileID,'%1s %16.2f\r\n' ,'r:',r);
 fprintf(fileID,'%1s %16.2f\r\n' ,'T:',T);
@@ -43,7 +44,7 @@ fprintf(fileID,'%16.2f' , K);
 fprintf(fileID,'\n');
 
 %% Print Prices and Runtimes
-for i=1:3:M
+for i=1:3:l
 
 fprintf(fileID,'%1s %2s\r\n' ,'method:',varargin{i});
 fprintf(fileID,'%1s','V:');
@@ -52,7 +53,6 @@ fprintf(fileID,'\n');
 fprintf(fileID,'%1s','t:');
 fprintf(fileID,'%16.4f' , varargin{i+2});
 fprintf(fileID,'\n');
-
 
 end
 
