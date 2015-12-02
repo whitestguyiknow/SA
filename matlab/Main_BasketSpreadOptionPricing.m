@@ -34,6 +34,6 @@ tmc_1 = toc;
 tic
 Vmc50_2 = priceBasketSpreadOptionMonteCarlo(K,r,T,e50,a50,S050,sigma50,rho50,nPaths,nSteps);
 tmc_2 = toc;
-printRun('mctest.txt',5,1,'charged','constant',0.4,'descending',0,r,K,T,seed,nPaths,nSteps,eps,...
+printRun('data/mctest.txt',5,1,'charged','constant',0.4,'descending',0,r,K,T,seed,nPaths,nSteps,eps,...
     'MC',Vmc50_1,tmc_1,'MC',Vmc50_2,tmc_2);
 
