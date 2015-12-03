@@ -12,9 +12,9 @@ seed = 518123;
 rng(seed);
 
 % MC settings
-nPaths = 1e2;
-nSteps = 1e2;
-M = 1e1;
+nPaths = 1e4;
+nSteps = 1e4;
+M = 1e3;
 
 % adaptive Simpson's rule
 eps = 1e-5;
