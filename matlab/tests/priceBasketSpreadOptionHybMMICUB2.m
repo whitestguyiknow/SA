@@ -1,8 +1,8 @@
-function [V] = priceBasketSpreadOptionHybMMICUB2(K, r, T, e, a, S0, sigma, rho, nIntervall)
+function [V,T] = priceBasketSpreadOptionHybMMICUB2(K, r, T, e, a, S0, sigma, rho, nIntervall)
 %% Pricing Function for Basket-Spread options using Hybrid Moment Matching associated with ICUB
 %% Based on Pricing and hedging Asian basket spread options (G.Deelstra, A.Petkovic, M.Vanmaele; 2010)
-% Using Trapezoidal Rule
-% Dismissed Implementation
+% Using Rectangular Rule
+%% Dismissed Implementation
 
 % Author: Daniel Waelchli
 % November 2015
@@ -30,8 +30,8 @@ assert(all(eig(rho)>=zeros(N,1)), 'correlation matrix not positive-semidefinite'
 
 
 %% Computation
-disp('Price basked-spread option with Hybrid Moment Matching Method associated with ICUB');
-
+disp('Price basked-spread option with Hybrid Moment Matching Method 2 (includes rectangular rule) associated with ICUB');
+tic;
 I = (e==1);
 M = sum(I);
 
@@ -73,6 +73,7 @@ IN1 = sum(exp(u1+A1(u)+0.5*Y1^2).*normcdf(Y1-fu))/nIntervall;
 IN2 = sum(exp(u2+A2(u)+0.5*Y2^2).*normcdf(Y2-fu))/nIntervall;
 
 V=IN1-IN2-K*(1-FSICKN);
+T=toc;
 end
 
 function [F] = fsicu(u,u1,A1,Y1,u2,A2,Y2,K,x0)

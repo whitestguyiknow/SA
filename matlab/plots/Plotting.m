@@ -3,10 +3,15 @@
 
 % Author: Daniel Waelchli
 % November 2015
+addpath('..');
+addpath('export');
 
 K = 10;
 r = 0.05;
 T = 1;
+
+% epsilon for HybMMICUB
+eps = 1e-5;
 
 % grids
 M = 100;
@@ -24,6 +29,7 @@ u1=0.8;
 [e_2,a_2,S0_2,sigma_2,rho_2] = generateMarketParams(10,6,'charged','constant',0.4,'descending',0.3);
 
 %% evaluation of f(x)
+disp('evaluation of f(x)..');
 f0_0 = zeros(1,M);
 fx0_0 = fx(u0,K,r,T,e_0,a_0,S0_0,sigma_0,rho_0);
 f0_1 = zeros(1,M);
@@ -61,6 +67,7 @@ hold off;
 export_fig('1','-transparent','-pdf');
 
 %% evaluation of integrands
+disp('evaluation of integrands..');
 I1_0 = zeros(1,M);
 fI1_0 = integrand(1,K, r, T, e_0, a_0, S0_0, sigma_0, rho_0,eps);
 I1_1 = zeros(1,M);
@@ -97,3 +104,39 @@ legend({'scenario 1, I_1','scenario 1, I_2','scenario 2, I_1',...
 axis('square');
 hold off;
 export_fig('2','-transparent','-pdf');
+
+%% runtime plots
+disp('runtime plots..');
+N = [2 4 6 8 10 13 16 24 32 64 128 256, 512];
+l=length(N);
+Tsob_c = zeros(1,l);
+Thybicub_c = zeros(1,l);
+Tsob_a = zeros(1,l);
+Thybicub_a = zeros(1,l);
+Tsob_d = zeros(1,l);
+Thybicub_d = zeros(1,l);
+
+
+for i = 1:l
+[e_c,a_c,S0_c,sigma_c,rho_c] = generateMarketParams(N(i),1,'charged','constant',0.4,'constant',0.3);
+[e_a,a_a,S0_a,sigma_a,rho_a] = generateMarketParams(N(i),1,'charged','constant',0.4,'alternating',0.3);
+[e_d,a_d,S0_d,sigma_d,rho_d] = generateMarketParams(N(i),1,'charged','constant',0.4,'descending',0.3);
+[~,Tsob_c(i)] = priceBasketSpreadOptionSOB(K,r,T,e_c,a_c,S0_c,sigma_c,rho_c);
+[~,Thybicub_c(i)] = priceBasketSpreadOptionHybMMICUB(K,r,T,e_c,a_c,S0_c,sigma_c,rho_c,eps);
+[~,Tsob_a(i)] = priceBasketSpreadOptionSOB(K,r,T,e_a,a_a,S0_a,sigma_a,rho_a);
+[~,Thybicub_a(i)] = priceBasketSpreadOptionHybMMICUB(K,r,T,e_a,a_a,S0_a,sigma_a,rho_a,eps);
+[~,Tsob_d(i)] = priceBasketSpreadOptionSOB(K,r,T,e_d,a_d,S0_d,sigma_d,rho_d);
+[~,Thybicub_d(i)] = priceBasketSpreadOptionHybMMICUB(K,r,T,e_d,a_d,S0_d,sigma_d,rho_d,eps);
+end
+
+figure(3)
+loglog(N,Tsob_c,'-b',N,Thybicub_c,'-r',N,Tsob_a,'-+b',N,Tsob_d,'-*b',N,Thybicub_a,'-+r',N,Thybicub_d,'-*r');
+grid minor;
+xlabel('N','FontName','Cambria','FontSize',14);
+ylim([0,1000])
+ylab=ylabel('Runtime [s]','FontName','Cambria','FontSize',14,'rot',0);
+set(ylab,'horizontalAlignment', 'left','position', [0.65, 1200, 0]);
+%title('Integrands','FontName','Cambria','FontSize',16);
+legend('SOB method','HybMMICUB method','Location','NorthWest');
+axis('square');
+export_fig('3','-transparent','-pdf');

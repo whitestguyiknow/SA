@@ -75,13 +75,13 @@ fulvia.fringuellotti@bf.uzh.ch
 \end{center}
 \end{titlepage}
 
-\pagenumbering{gobble}
-\section*{Abstract}
-Insert Abstract
-
-\newpage
 \pagenumbering{roman}
 \setcounter{page}{1}
+\section*{Abstract}
+I analyse two approximation methods for pricing hybrid basket-spread options: the second-order boundary approximation introduced by S.Deng, M.Li, and J.Zhou [1] and the hybrid moment match method associated to the improved comonotonic upper bound presented by G.Deelstra, A.Petkovic and M.Vanmaele [2]. Both method are considered to be very fast and accurate. I present both methods and compare their relative performances based on my MATLAB implementation. My numerical experiments include basekt-spread options with different characteristics.
+
+\newpage
+
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \tableofcontents
 
@@ -166,7 +166,7 @@ Rewriting the correlation matrix $\Sigma$ as a composition of a Nx1 vector $\Sig
 $$\Sigma = (q_{i,j}) = \begin{pmatrix} 1 & \Sigma_{10}' \\ \Sigma_{10} & \Sigma_{11} \end{pmatrix}.$$ 
 Before introducing the methods for valuing hybrid basket-spread option a short analysis of the exercise boundary is necessary. At time T, the hybrid basket-spread option is in-the-money 
 if $H_0(T) - \sum_{k=1}^N S_k(T)-K>0$. If $K>0$, rewriting this inequality in terms of the random variable $X$ gives
-$$X>\frac{log(\sum e^{\sigma_kY_k-\mu_k+K}-\mu_0^H}{\sigma_0^H}$$
+$$X>\frac{log(\sum e^{\sigma_kY_k-\mu_k+K}-\mu_0^H)}{\sigma_0^H}$$
 Conditioned on $Y_k=y_k$, the option is in-the-money if $X>x(y)$, where
 $$x(y)\equiv\frac{log(\sum e^{\sigma_ky_k-\mu_k+K}-\mu_0^H)}{\sigma_0^H}.$$
 Note that the exercise boundary $x(y)$ is a nonlinear function in the components of y but close to being linear around $y=0$.
@@ -392,7 +392,7 @@ where $x = \Phi^{-1}(F_{\mathbb{S}^{ic}|U=u})$. In a second step I calculate $F_
 Figure \ref{fig:fx} shows $f(x,u)$ (\ref{eq:fx}) for different types of scenario. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{graphics/fx_noTitle.pdf}
+	\includegraphics[width=0.6\textwidth]{graphics/fx_noTitle.pdf}
 	\caption{A picture of a gull.}
 	\label{fig:fx}
 \end{figure}
@@ -400,14 +400,20 @@ Indeed $f(x)$ is a monotonic function such that \textit{fzero} is able to find a
 Figure \ref{fig:ints} shows the two integrands in equation \ref{eq:ints}. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.5\textwidth]{graphics/ints_noTitle.pdf}
+	\includegraphics[width=0.6\textwidth]{graphics/ints_noTitle.pdf}
 	\caption{A picture of a gull.}
 	\label{fig:ints}
 \end{figure}
 To solve the integrals I considered two integration techniques, the adaptive Simpson's rule and the rectangle method. The adaptive Simpson's rule repeatedly splits an integral $I = \int_a^b g(x) dx$ in two subintervalls $ I_l = \int_a^{\frac{b-a}{2}} g(x) dx$ and $I_r = \int_{\frac{b-a}{2}}^b g(x) dx$ until the criteria $|I-I_l-I_r| \leq \epsilon$ is met, whereas the integrals are numerically approximated according to the standard Simpson's rule. The rectangle method divides the interval (a,b) into $N$ equal subintervals of length $h=\frac{b-a}{N}$ and approximates the integral by adding up the areas of the $N$ rectangles under the curve. The rectangle method allows to precompute $F_{\mathbb{S}^{ic}|U=u}(K)$ for all subintervals once and reuse it in all three integrals. On the other hand the adaptive Simpson's rule might use less subintervalls in total but possibly this approach needs to recompute $F_{\mathbb{S}^{ic}|U=u}(K)$ multiple times for the same subintervall. The accuracy and runtime of the two mentioned methods strongly depend on $\epsilon$ and $N$, respectively. A performance analysis based on convergence rate versus computation time shows that the adaptive Simpson's rule is outperforming the rectangle method. Also based on my analysis I set $\epsilon = 10^{-5}$. 
-\subsection{Runtime}
+\subsection{Run-time analysis}
 \label{rt}
-
+A plot will be enough to demonstrate that the SOB method (blue) is much faster than the HybMMICUB method (red). Figure \ref{fig:rt} shows the run-time for both methods for three different scenarios each. The complexity of the SOB method is $\mathcal{O}(N^3)$ whereas the HybMMICUB method appears to behave linearly. But still the run-time of the SOB method is much shorter for a reasonable amount of underlyings. The experiment is run on a machine with a 1.8 GHz Intel Core i7 processor and 4 GB RAM,
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.6\textwidth]{graphics/runtime.pdf}
+	\caption{A picture of a gull.}
+	\label{fig:rt}
+\end{figure}
 \newpage
 \section{Results and Future Work}
 \label{sec:results}
