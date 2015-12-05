@@ -315,9 +315,9 @@ J^2(u,v)=&u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2) - 4(1-tr(F))\psi-\psi^2)v'Fv+
 \end{prop}
 
 \newpage
-\subsection{Hybrid Moment Matching associated with Improved Comonotonic Upper Bound}
+\subsection{Hybrid Moment Matching associated to Improved Comonotonic Upper Bound}
 \label{sec:hybmmicup}
-The hybrid moment matching method associated with improved comonotonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums 
+The hybrid moment matching method associated to improved comonotonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums 
 $\mathbb{S}_1=\sum_{i=1}^MS_i$ and $\mathbb{S}_2=\sum_{j=M+1}^{M+N}S_j.$ Then both sums are moment matched with a log-normal random variable. Second, the price of the price of the resulting spread option with payoff $(\mathbb{S}_1-\mathbb{S}_2-K)^+$ is approximated with the improved comonotonic upper bound method. Moment matching methods, the improved comonotonic upper bound and the HybMMICUP procedure have been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that the HybMMICUP method  performs best at approximating the price of a basket spread option. It can also price options of Asian type but this case won’t be treated in my work.\\
 More formally, the fair value of the hybrid European basket spread option will be rewritten as
 \begin{equation}
@@ -420,30 +420,36 @@ A plot will be enough to demonstrate that the SOB method (blue) is much faster t
 
 \subsection{Comparison of accuracy}
 \label{sec:accuracy}
-I now compare the accuracy of the second-order boundary approximation with the hybrid moment matching method associated with the improved comonotonic upper bound. To do that, I approximate the price of the options with Monte Carlo simulations and use it as as a rough comparison benchmark. To simulate the paths of the underlying assets I apply the Euler-Maruyama method. For each asset I generate 1'000'000 paths (respectively 500'000, if N big, which can lead to memory issues) having each path divided in to 1000 time-steps. I price every option five times to estimate the standard deviation of the Monte Carlo approximation. All following experiments run on the ETH Euler Cluster with a 2.4GHz Intel Core 2 Duo processor with 4GB of RAM. \\
-First I replicate two experiments from [1] and from [2] to validate my implementations. Then I present my experiments for which I chose different correlation matrices and different volatility vectors. Some experiments are repeated while increasing the dimension from N=10 to N=50 or varying the volatility. In my last experiment I use a different structure of the spot prices and strikes. Throughout my experiments I set T=1 and r=5\%.
+I now compare the accuracy of the second-order boundary approximation with the hybrid moment matching method associated to the improved comonotonic upper bound. To do that, I approximate the price of the options with Monte Carlo simulations and use it as as a rough comparison benchmark. To simulate the paths of the underlying assets I apply the Euler-Maruyama method. For each asset I generate 1'000'000 paths (respectively 500'000, if N big, which can lead to memory issues) having each path divided in to 1000 time-steps. I price every option five times to estimate the standard deviation of the Monte Carlo approximation. All following experiments run on the ETH Euler Cluster with a 2.4GHz Intel Core 2 Duo processor with 4GB of RAM. \\
+First I replicate two experiments from [1] and from [2] to validate my implementations. Then I present my experiments for which I chose different correlation matrices and different volatility vectors. Some experiments are repeated while increasing the dimension from N=10 to N=50 or varying the volatility. In my last experiment I use a different structure of the spot prices and strikes. Throughout my experiments I set T=1 and r=5\%.\\
+
+\newpage
+\section{Appendix: Numerical Results}
+\label{sec:appendix}
+
+
 \captionsetup{skip=0pt}
-\begin {table}
+\begin {table}[H]
 \caption {Replication of Table 3, Panel B in [1]} 
 \begin{center}
-\begin{tabular}{c|c c c|c c c}
+\begin{tabular}{c|c c c c|c c c c}
 \hline
-\multicolumn{1}{c|}{} & \multicolumn{3}{|c|}{$\sigma$=30\%} & \multicolumn{3}{|c}{$\sigma$=60\%} \\ 
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
 \hline
-  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} \\
-  0 &	20.33894396 & 20.58110878 &  & & &  \\
-  5 & 15.92595404 & 16.11529654 & & &  &  \\
-10 & 12.00439087 & 12.15386256 &  &  &  &  \\
-15 & 8.73255258 & 8.84483358 &  &  &  &  \\
-20 & 6.16426185 & 6.23719001 &  &  &  &  \\
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC} & \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.}\\
+  0 &	20.33894396 & 20.58110878 &  & & 57.12  & 58.12 & 57.35 & 0.08\\
+  5 & 15.92595404 & 16.11529654 & & & 54.58 & 55.55 & 54.81 & 0.08 \\
+10 & 12.00439087 & 12.15386256 & &  & 52.13 & 53.07  & 52.36 & 0.08 \\
+15 & 8.73255258 & 8.84483358 &  &  & 49.77 & 50.67 & 50.00 & 0.08\\
+20 & 6.16426185 & 6.23719001 &  &  & 47.40 & 48.36 & 47.72 & 0.07\\
 \hline
-Time [s] & & & & & & \\
+Time [s] & & & & & 0.0179& 24.281 & 378.20& \\
 \hline
 \end{tabular}
 \end{center}
 \end{table}
 
-\begin {table}
+\begin {table}[H]
 \caption {Replication of Table 6 in [2]} 
 \begin{center}
 \begin{tabular}{c|c c c c}
@@ -465,7 +471,7 @@ Time [s] & 0.0151 & 11.869 & 248.59 & \\
 \end{center}
 \end{table}
 
-\begin {table}
+\begin {table}[H]
 \caption {Descending Volatilities, 10 Assets} 
 \begin{center}
 \begin{tabular}{c|c c c c|c c c c}

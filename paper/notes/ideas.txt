@@ -3,21 +3,10 @@
 ## 3.November
 ## 19.Nov
 
--use implementation techniques metnioned in [1] (Points 4&5)
--plot A(y) and x(y) to show taht it is close to linear
--try binomial trees
 -mention second order approx works also for log Orenstein Uhlenbeck process, not only GBM
--plot the equation in (15) to show regularity of function which has to be solve
--plot convergence and integrands from HybMMICUB
 -check dates of references
 -look through introduction of SOB method, state in my introduction earlier work
 
-## 23.Nov
--use Proposition commands and others in latex (like other SA)
-
-##25.Nov
--matlab uses chol algorithm in eig(A) for symmetric matrices
-
-##1. Dec
-- interval with one l
+##
+hybrid moment matching method associated to the ICUB.
 
