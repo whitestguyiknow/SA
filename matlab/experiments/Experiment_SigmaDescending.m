@@ -14,7 +14,7 @@ rng(seed);
 % MC settings
 nPaths = 1e4;
 nSteps = 1e4;
-M = 1e3;
+M = 1e2;
 
 % adaptive Simpson's rule
 eps = 1e-5;
@@ -34,7 +34,7 @@ nAssets = 10;
 nPositive = 5;
 S0type = 'charged';
 sigmaType = 'descending';
-sigma = 0.0;
+sigma = 0.6;
 rhoType = 'constant';
 rho = 0.4;
 
@@ -66,12 +66,6 @@ printRun('data/SigmaDeacreasing10.txt',nAssets,nPositive,S0type,sigmaType,sigma,
 
 % Market Params
 nAssets = 50;
-nPositive = 5;
-S0type = 'charged';
-sigmaType = 'descending';
-sigma = 0.0;
-rhoType = 'constant';
-rho = 0.4;
 
 [eD,aD,S0D,sigmaD,rhoD] = generateMarketParams(nAssets,nPositive,S0type,sigmaType,sigma,rhoType,rho);
 

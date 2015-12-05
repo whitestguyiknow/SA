@@ -59,8 +59,8 @@ xlabel('x','FontName','Cambria','FontSize',14);
 ylab=ylabel('f(x)','FontName','Cambria','FontSize',14,'rot',0);
 set(ylab,'horizontalAlignment', 'left','position', [-5.75, 1040, 0]);
 %title('EVALUATION F(X,U=0.2) AND F(X,U=0.8)','FontName','Cambria','FontSize',16);
-legend({'scenario 1, u=0.2','scenario 1, u=0.8','scenario 2, u=0.2',...
-    'scenario 2, u=0.8','scenario 3, u=0.2','scenario 3, u=0.8'},'FontSize',12,...
+legend({'setting 1, u=0.2','setting 1, u=0.8','setting 2, u=0.2',...
+    'setting 2, u=0.8','setting 3, u=0.2','setting 3, u=0.8'},'FontSize',12,...
     'Location','southeast');
 axis('square');
 hold off;
@@ -93,13 +93,13 @@ figure(2)
 hold on;
 plot(u,I1_0,'b',u,I2_0,'--b',u,I1_1,'r',u,I2_1,'--r',u,I1_2,'g',u,I2_1,'--g')
 grid minor;
-xlabel('x','FontName','Cambria','FontSize',14);
+xlabel('u','FontName','Cambria','FontSize',14);
 ylim([0,1000])
-ylab=ylabel('I_i(x)','FontName','Cambria','FontSize',14,'rot',0);
+ylab=ylabel('I_i(u)','FontName','Cambria','FontSize',14,'rot',0);
 set(ylab,'horizontalAlignment', 'left','position', [-0.075, 1010, 0]);
 %title('Integrands','FontName','Cambria','FontSize',16);
-legend({'scenario 1, I_1','scenario 1, I_2','scenario 2, I_1',...
-    'scenario 2, I_2','scenario 3, I_1','scenario 3, I_2'},'FontSize',12,...
+legend({'setting 1, I_1','setting 1, I_2','setting 2, I_1',...
+    'setting 2, I_2','setting 3, I_1','setting 3, I_2'},'FontSize',12,...
     'Location','northwest');
 axis('square');
 hold off;

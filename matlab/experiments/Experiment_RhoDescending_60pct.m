@@ -35,7 +35,7 @@ nAssets = 10;
 nPositive = 5;
 S0type = 'charged';
 sigmaType = 'constant';
-sigma = 0.3;
+sigma = 0.6;
 rhoType = 'descending';
 rho = 0.0;
 
@@ -58,7 +58,7 @@ end
 [VmcD_4,tmc_4] = priceBasketSpreadOptionMonteCarlo(K,r,T,eD,aD,S0D,sigmaD,rhoD,nPaths,nSteps,M);
 [VmcD_5,tmc_5] = priceBasketSpreadOptionMonteCarlo(K,r,T,eD,aD,S0D,sigmaD,rhoD,nPaths,nSteps,M);
 
-printRun('data/RhoDescending10.txt',nAssets,nPositive,S0type,sigmaType,sigma,rhoType,rho,r,K,T,seed,nPaths,nSteps,M,eps,...
+printRun('data/RhoDescending10_60pct.txt',nAssets,nPositive,S0type,sigmaType,sigma,rhoType,rho,r,K,T,seed,nPaths,nSteps,M,eps,...
     'SOB',VsobD,tsobD,'HybMMICUB',VhybMMICUBD,thybMMICUBD,...
     'MC',VmcD_1,tmc_1,'MC',VmcD_2,tmc_2,'MC',VmcD_3,tmc_3,'MC',VmcD_4,tmc_4,...
     'MC',VmcD_5,tmc_5);
@@ -87,7 +87,7 @@ end
 [VmcD_4,tmc_4] = priceBasketSpreadOptionMonteCarlo(K,r,T,eD,aD,S0D,sigmaD,rhoD,nPaths,nSteps,M);
 [VmcD_5,tmc_5] = priceBasketSpreadOptionMonteCarlo(K,r,T,eD,aD,S0D,sigmaD,rhoD,nPaths,nSteps,M);
 
-printRun('data/RhoDescending50.txt',nAssets,nPositive,S0type,sigmaType,sigma,rhoType,rho,r,K,T,seed,nPaths,nSteps,M,eps,...
+printRun('data/RhoDescending50_60pct.txt',nAssets,nPositive,S0type,sigmaType,sigma,rhoType,rho,r,K,T,seed,nPaths,nSteps,M,eps,...
     'SOB',VsobD,tsobD,'HybMMICUB',VhybMMICUBD,thybMMICUBD,...
     'MC',VmcD_1,tmc_1,'MC',VmcD_2,tmc_2,'MC',VmcD_3,tmc_3,'MC',VmcD_4,tmc_4,...
     'MC',VmcD_5,tmc_5);

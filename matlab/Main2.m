@@ -40,6 +40,9 @@ tsob4 = zeros(1,nK);
 VhybMMICUB4 = zeros(1,nK);
 thybMMICUB4 = zeros(1,nK);
 
+VhybMMICUB24 = zeros(1,nK);
+thybMMICUB24 = zeros(1,nK);
+
 for i = 1:nK
     [Vsob4(i),tsob4(i)] = priceBasketSpreadOptionSOB(K(i),r,T,e4,a4,S04,sigma4,rho4);
     [VhybMMICUB4(i),thybMMICUB4(i)] = priceBasketSpreadOptionHybMMICUB(K(i),r,T,e4,a4,S04,sigma4,rho4,eps);

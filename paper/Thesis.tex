@@ -5,7 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[us]{datetime}
 \usepackage{multirow}
-
+\usepackage{caption}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{tocloft}
@@ -78,7 +78,7 @@ fulvia.fringuellotti@bf.uzh.ch
 \pagenumbering{roman}
 \setcounter{page}{1}
 \section*{Abstract}
-I analyse two approximation methods for pricing hybrid basket-spread options: the second-order boundary approximation introduced by S.Deng, M.Li, and J.Zhou [1] and the hybrid moment match method associated to the improved comonotonic upper bound presented by G.Deelstra, A.Petkovic and M.Vanmaele [2]. Both method are considered to be very fast and accurate. I present both methods and compare their relative performances based on my MATLAB implementation. My numerical experiments include basekt-spread options with different characteristics.
+I analyse two approximation methods for pricing hybrid basket-spread options: the second-order boundary approximation introduced by S.Deng, M.Li, and J.Zhou \cite{sob} and the hybrid moment match method associated to the improved comonotonic upper bound presented by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}. Both method are considered to be very fast and accurate. I present both methods and compare their relative performances based on my MATLAB implementation. My numerical experiments include basket-spread options with different characteristics.
 
 \newpage
 
@@ -91,7 +91,7 @@ I analyse two approximation methods for pricing hybrid basket-spread options: th
 \section{Introduction}
 A hybrid European basket-spread option is a financial derivative, whose
 maturity is given by the difference (the so called spread) between two 
-baskets of aggregated and weighted underlying asset prices. In mathematical terms it's pay-off is given by 
+baskets of aggregated and weighted underlying asset prices. In mathematical terms it's payoff is given by 
 the formula:
 \begin{equation}
 \label{eq:po}
@@ -107,19 +107,20 @@ fast approximation method at hand. The multi-dimensionality and
 hence the lack of a marginal distribution for the basket-spread makes it impossible to give an exact
 analytical representation for the price (even not in the simplest framework
 where the asset prices are driven by  correlated geometric Brownian motions). Numerical approaches such 
-as Monte Carlo simulations or PDE methods become very slow and hence inpracticble as the number of underlyings increases. 
+as Monte Carlo simulations or PDE methods become very slow and hence inpracticable as the number of underlyings increases. 
 Therefore I closely look at two different basket-spread option pricing methods which have been 
-introduced by S.Deng, M.Li, and J.Zhou [1] and by G.Deelstra, A.Petkovic and M.Vanmaele [2]. According to the authors both the second-order
+introduced by S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}. According to the authors both the second-order
 boundary approximation method [1,Chap.3,Prop.5] and the hybrid moment matching method associated to the improved comonotonic upper bound (HybMMICUB)
 [2,Chap.3,Prop.5] are considered to be extremely fast and accurate. Therefore I implement both methods in MATLAB
 and compare their numerical performances as a function of the basket spread characteristics. 
 As a comparison benchmark I estimate the true prices with Monte Carlo simulations also implemented in MATLAB.\\
-The paper is organized as follows.
+The paper is organized as follows. In section 2 I first show the assumptions on which both methods are based on. Then I present the underlying theories for both the  SOB method followed by the HybMMICUB method.\\
+In section three I start with a short statement about the numerical experiments I am using to test my implementations. Then I explain the computational bottlenecks of both methods and look at their run-time. Last I discuss my numerical experiments.
 
 \newpage
 \section{Approximation methods}
 \label{sec:am}
-In the next subsection \ref{sec:ms} I show the assumptions on which both the second-order boundary method and the HybMMICUB method are based on. Followed by subsection \ref{sec:sob} and \ref{sec:hybmmicup} which both formally present the two approximation methods. These subsections will closely follow the works of S.Deng, M.Li, and J.Zhou [1] and by G.Deelstra, A.Petkovic and M.Vanmaele [2].
+In the next subsection \ref{sec:ms} I show the assumptions on which both the second-order boundary method and the HybMMICUB method are based on. Followed by subsection \ref{sec:sob} and \ref{sec:hybmmicup} which both formally present the two approximation methods. These subsections will closely follow the works of S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}.
 
 \subsection{Model setup}
 \label{sec:ms}
@@ -141,7 +142,7 @@ Because the weights $w_i$ can be incorporated in the asset price by taking $S_i(
 
 \subsection{Second-order Boundary Method}
 \label{sec:sob}
-The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou [3] and it was extended in 2007 to the multi-asset case [1]. Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in [1]. Their work is a valuable contribution because numerous methods have been existing for spread options only involving two underlyings. In [1] Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) [4] which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. The computational edge of the SOB method lies in its closed form solution which only involves arithmetic calculations.\\
+The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou \cite{sob2} and it was extended in 2007 to the multi-asset case \cite{sob}. Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in \cite{sob}. Their work is a valuable contribution because numerous methods have been existing for spread options involving only two underlyings. In \cite{sob} Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) \cite{cd} which also approximates the value of a multi-asset spread option. A study* of the results shows that the SOB method is the most accurate and also the fastest. The computational edge of the SOB method lies in its closed form solution which involves solely arithmetic calculations.\\
 The SOD method approximates the price of a spread option with payoff
 \begin{equation}
 \label{eq:sobpo}
@@ -314,10 +315,10 @@ J^2(u,v)=&u\psi^{3/2}\phi(u\sqrt{v})\big\{2tr(F^2) - 4(1-tr(F))\psi-\psi^2)v'Fv+
 \end{prop}
 
 \newpage
-\subsection{Hybrid Moment Matching associated with Improved Comontonic Upper Bound}
+\subsection{Hybrid Moment Matching associated with Improved Comonotonic Upper Bound}
 \label{sec:hybmmicup}
-The hybrid moment matching method associated with improved comontonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums 
-$\mathbb{S}_1=\sum_{i=1}^MS_i$ and $\mathbb{S}_2=\sum_{j=M+1}^{M+N}S_j.$ Then both sums are moment matched with a log-normal random variable. Second, the price of the price of the resulting spread option with payoff $(\mathbb{S}_1-\mathbb{S}_2-K)^+$ is approximated with the improved comontonic upper bound method. Moment matching methods, the improved comontonic upper bound and the HybMMICUP procedure have been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that the HybMMICUP method  performs best at approximating the price of a basket spread option. It can also price options of Asian type but this case won’t be treated in my work.\\
+The hybrid moment matching method associated with improved comonotonic upper bound method (HybMMICUP) combines two approximation techniques. First, the underlyings are split up according their sign and aggregated in two sums 
+$\mathbb{S}_1=\sum_{i=1}^MS_i$ and $\mathbb{S}_2=\sum_{j=M+1}^{M+N}S_j.$ Then both sums are moment matched with a log-normal random variable. Second, the price of the price of the resulting spread option with payoff $(\mathbb{S}_1-\mathbb{S}_2-K)^+$ is approximated with the improved comonotonic upper bound method. Moment matching methods, the improved comonotonic upper bound and the HybMMICUP procedure have been presented by Deelstra, Petkovic and Vanmaele in 2009 [2]. The numerical results from [2] show that the HybMMICUP method  performs best at approximating the price of a basket spread option. It can also price options of Asian type but this case won’t be treated in my work.\\
 More formally, the fair value of the hybrid European basket spread option will be rewritten as
 \begin{equation}
 \label{eq:spread}
@@ -331,14 +332,14 @@ m_{11}=e^{rT}\sum_{i=1}^{M}S_i(0), \quad m_{12}=e^{rT}\sum_{i=M+1}^{M+N}S_i(0),
 \begin{equation}
 m_{2j}=e^{2rT}\sum_{i=1}^{M}\sum_{j=1}^{M+N}S_i(0)S_j(0)e^{\rho_{i,j}\sigma_i\sigma_jT}
 \end{equation}
-Additionally we need the correlation coefficient $\rho$ between $ln(\mathbb{\tilde{S}}_1)$ and $ln(\mathbb{\tilde{S}}_2)$ to approximate the spread given in equation \ref{eq:spread}. Note the tildes above $\mathbb{S}$ as we are left with moment matched approximations of log-normal random variables. The coefficcent $\rho$ can be recovered from the eqiality of cross moments (crm):
+Additionally we need the correlation coefficient $\rho$ between $ln(\mathbb{\tilde{S}}_1)$ and $ln(\mathbb{\tilde{S}}_2)$ to approximate the spread given in equation \ref{eq:spread}. Note the tildes above $\mathbb{S}$ as we are left with moment matching approximations of log-normal random variables. The coefficient $\rho$ can be recovered from the equality of cross moments (crm):
 $$\mathbb{E}[S_1S_2] = \mathbb{E}[\tilde{S}_1\tilde{S}_2],$$
 namely
 \begin{equation}
 crm:=\sum_{i=1}^{M}\sum_{j=1}^{M+N}\mathbb{E}[S_i(T)S_j(T)]=e^{\mu_1+\mu_2+1/2\sigma_1^2+1/2\sigma_2^2+\sigma_1\sigma2\rho},
 \end{equation}
 where $\mathbb{E}[S_i(T)S_j(T)] = S_i(0) S_j(0) e^{2rT+\rho_{ij}\sigma_i\sigma_jT}.$\\
-For an approximation of the spread (\ref{eq:spread}) the improved comontonic upper bound (ICUB) is used. The ICUB is displayed in the next proposition, the proof and derivation can be found in [2]:
+For an approximation of the spread (\ref{eq:spread}) the improved comonotonic upper bound (ICUB) is used. The ICUB is displayed in the next proposition, the proof and derivation can be found in [2]:
 \begin{prop}
 Consider the following stop-loss premium
 $$\mathbb{E}[(e^{\mu_1+\sigma_1X_1}-e^{\mu_2+\sigma_2X_2}-K)^+],$$
@@ -370,54 +371,219 @@ In the presentation of the HybMMICUP method I also omitted the weights of the as
 \section{Numerical Analysis}
 \label{sec:na}
 This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations \emph{priceBasketSpreadOptionSOB.m} and \emph{priceBasketSpreadOptionHybMMICUB.m}.\\
-To experiment with my implementations I created a method \emph{generateMarketParams.m} to generate different sets of input parameters for my pricing methods. It allows me to create combinations of scenarios for which I can chose the number of assets $N$, the number of assets with positive sign in the spread $nP$ and two different types (\emph{charged} and \emph{descending}) of vectors holding the initial values of the assets: 
-$$S_{c}(0) = [10(N+1), 10, ..., 10],\quad S_{de}(0) = [10N, 10(N-1), ..., 10].$$ 
-Also I can chose between a volatility vector with \emph{constant} entries equal $\sigma_0$ or with \emph{descending} entires, which means that entires are evenly spaced between $\sigma_0$ and 0.1: 
-$$\sigma_{const} = [\sigma_0, \sigma_0, ...,\sigma_0] \quad \sigma_{de} = [\sigma_0,\frac{(\sigma_0-0.1)(N-2)}{N-1}, ..., 0.1].$$
-Moreover I can create three different correlation matrices, \emph{constant} type
-$$\Sigma_{const} =\begin{pmatrix}1 & \rho & \cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots & \vdots & \ddots & \vdots \\ \rho & \rho & \cdots & \rho \end{pmatrix}  ,$$
-\emph{alternating} type $\Sigma_{alt},$ where all non-diagonal elements $\Sigma_{i\neq j} = \pm \rho$ whereas the sign changes inbetween cross-diagonals. The correlation matrix of \emph{descending} type is defined as follows:
-$$\Sigma_{de} = \begin{pmatrix}1 & \frac{1}{3} & \cdots & \frac{1}{N+1} \\ \frac{1}{3} & 1 & \cdots & \frac{1}{N+2} \\ \vdots & \vdots & \ddots & \vdots \\ \frac{1}{N+1} & \frac{1}{N+2} & \cdots & \frac{1}{2N} \end{pmatrix},$$
-whereas the non-diagonal elements are set to $\Sigma_{i\neq j} = \frac{1}{i+j}$.
-Throughout my experiments the weights $w_i$ will be set to one, the interst rate is kept constant $r=0.05$ and maturity $T$ is one.
+I test my implementations within different settings, meaning I create artificial compositions of spot prices $S_k(0)$, variance vectors $\sigma$ and correlation matrices $\Sigma$. I set the strike price K=10, interest rate  r=5\% and maturity T=1. I use spot price vectors of type \emph{charged} or of type \emph{descending} defined as follows: 
+$$S_{c}(0) = [10(N+1), 10, ..., 10],\quad S_{d}(0) = [10N, 10(N-1), ..., 10].$$  
+The volatility vector is either of type \emph{constant} $\sigma_c$, meaning $\sigma_k = \sigma^*,\;k=0,1,...,N,$ or of  type \emph{descending} $\sigma_d$, meaning that all volatilities are evenly spaced between $\sigma^*$ and 0.1, with $\sigma_0 = \sigma^*$ and $\sigma_N = 0.1$.
+Moreover I use three different correlation matrices, one of \emph{constant} type
+$$\Sigma_{c} =\begin{pmatrix}1 & \rho & \cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots & \vdots & \ddots & \vdots \\ \rho & \rho & \cdots & \rho \end{pmatrix}  ,$$
+one of \emph{alternating} type $\Sigma_{a},$ having all non-diagonal elements $\Sigma_{i\neq j} = \pm \rho$ with alternating signs in between cross-diagonals. And a \emph{descending} correlation matrix which I define as follows:
+$$\Sigma_{d} = \begin{pmatrix}1 & \frac{1}{3} & \cdots & \frac{1}{N+1} \\ \frac{1}{3} & 1 & \cdots & \frac{1}{N+2} \\ \vdots & \vdots & \ddots & \vdots \\ \frac{1}{N+1} & \frac{1}{N+2} & \cdots & \frac{1}{2N} \end{pmatrix},$$
+(the non-diagonal elements are set  $\Sigma_{i\neq j} = \frac{1}{i+j}$).
+Additionally I vary the number of assets N as well as the fraction of positively weighted assets in the spread.
 \subsection{SOB Method}
-There are four remarkable operations in the SOB implementaion. First, there are mainly matrix-vector operations which have a computational complexity of $\mathcal{O}(n^2)$ (ignoring scalar operations). Second, in order to compute the values $\mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv} I preferably solve the linear system $\Sigma_{10} = \Sigma_{11}x$ instead of inverting the matrix $\Sigma_{11}$. In this case solving a system of linear equations has a complexity of $\mathcal{O}(n^3)$. Third, to compute $\Sigma_{11}^{1/2}$ required for all $d$'s (equation $\ref{eq:d0}, \ref{eq:dk}, \ref{eq:dN1}$) I compute it's eigenvalues and eigenvectors for which MATLAB choses the Cholesky decomposition having complexity $\mathcal{O}(n^3)$. Last, there are a couple of matrix-matrix multiplications in the code with complexity of $\mathcal{O}(n^3)$ also. All in all, the SOB method has a compuational complexity of $\mathcal{O}(n^3)$ up to some constant, but apart from the computational costly operations this method is very straight forward to implement and all operations can be vectorized. Runtime plots will follow up in subsection \ref{rt}.
+There are four remarkable operations in the SOB implementation. First, there are mainly matrix-vector operations which have a computational complexity of $\mathcal{O}(n^2)$ (ignoring scalar operations). Second, in order to compute the values $\mu_{x|y}$ and $\Sigma_{x|y}$ in equation \ref{eq:inv} I preferably solve the linear system $\Sigma_{10} = \Sigma_{11}x$ instead of inverting the matrix $\Sigma_{11}$. In this case solving a system of linear equations has a complexity of $\mathcal{O}(n^3)$. Third, to compute $\Sigma_{11}^{1/2}$ required for all $d$'s (equation $\ref{eq:d0}, \ref{eq:dk}, \ref{eq:dN1}$) I compute its eigenvalues and eigenvectors for which MATLAB chooses the Cholesky decomposition having complexity $\mathcal{O}(n^3)$. Last, there are a couple of matrix-matrix multiplications in the code with complexity of $\mathcal{O}(n^3)$ also. All in all, the SOB method has a computational complexity of $\mathcal{O}(n^3)$ up to some constant, but apart from the computational costly operations this method is very straightforward to implement and all operations can be vectorized. Run-time plots will follow up in subsection \ref{rt}.
 \subsection{HybMMICUP}
-This subsection refers to my implementation \emph{priceBasketSpreadOptionHybMMICUB.m}. At first sight, there are few computational costly operations involving matrix multiplications. But the complexity of the procedure lies in the two nested subroutines which are needed to evaluate equation \ref{eq:ints}. The eqaution includes three integrals (one of it to deternine $F_{\mathbb{S}^{ic}}(K)$) for which in each discretization step $\delta u$ one numerically needs so solve equation \ref{eq:fzero} in order to determine $F_{\mathbb{S}^{ic}|U=u}(K)$. Therefore I need a reliable integration scheme to find the improved comontonic upper bound. To find $F_{\mathbb{S}^{ic}|U=u}(K)$ I first use the zero finding subroutine \textit{fzero} and apply it to the function
+This subsection refers to my implementation \emph{priceBasketSpreadOptionHybMMICUB.m}. At first sight, there are few computational costly operations involving matrix multiplications. But the complexity of the procedure lies in the two nested subroutines which are needed to evaluate equation \ref{eq:ints}. The equation includes three integrals (one of it to determine $F_{\mathbb{S}^{ic}}(K)$) for which in each discretization step $\delta u$ one numerically needs so solve equation \ref{eq:fzero} in order to determine $F_{\mathbb{S}^{ic}|U=u}(K)$. Therefore I need a reliable integration scheme to find the improved comonotonic upper bound. To find $F_{\mathbb{S}^{ic}|U=u}(K)$ I first use the zero finding subroutine \textit{fzero} and apply it to the function
 \begin{equation}
 \label{eq:fx}
 f(x,u) = \sum_{i=1}^2\epsilon_ie^{\mu_i+A_i(u)+Y_ix}-K, \quad u\in(0,1)
 \end{equation}
 where $x = \Phi^{-1}(F_{\mathbb{S}^{ic}|U=u})$. In a second step I calculate $F_{\mathbb{S}^{ic}|U=u}=\Phi(x)$. Experiments have shown that splitting up the calculation provides stability while finding $F_{\mathbb{S}^{ic}|U=u}$. 
-Figure \ref{fig:fx} shows $f(x,u)$ (\ref{eq:fx}) for different types of scenario. 
+Figure \ref{fig:fx} shows $f(x,u)$ (\ref{eq:fx}) for different settings. 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.6\textwidth]{graphics/fx_noTitle.pdf}
-	\caption{A picture of a gull.}
+	\captionsetup{width=.6\linewidth}
+	\includegraphics[width=0.6\textwidth]{graphics/fx.pdf}
+	\caption{$f(x,u)$ within three different settings and u = 0.2 (solid) or u = 0.8 (dashed). In setting 1 (green) I use the \emph{charged} spot price vector, N=4 with two positively weighted assets in the spread and $\Sigma$ of type \emph{constant.} In setting 2 (blue) I use the \emph{descneding} spot price vector, N=20 with five positively weighted assets in the spread and $\Sigma$ of type \emph{alternating.} In setting 3 (red) I use the \emph{charged} spot price vector, N=10 with six positively weighted assets and $\Sigma$ of type \emph{descending}. Throughout I set $\sigma_k = 0.4, \; k=0,1,...,N$.}
 	\label{fig:fx}
 \end{figure}
-Indeed $f(x)$ is a monotonic function such that \textit{fzero} is able to find a zero for given function. Denote that f(x) is not defined for $u=1$ and for $u=0$ there exists no zero as $f(x,0)=-K$. This poses a problem for the integrals which are defined on $u\in[0,1]$. To avoid this problem I limit the integration intervall to $u\in[\delta u,1-\delta u],\; \delta u \rightarrow 0.$\\
+Indeed $f(x)$ is a monotonic function such that \textit{fzero} is able to find a zero for given function. Denote that f(x) is not defined for $u=1$ and for $u=0$ there exists no zero as $f(x,0)=-K$. This poses a problem for the integrals which are defined on $u\in[0,1]$. To avoid this problem I limit the integration interval to $u\in[\delta u,1-\delta u],\; \delta u \rightarrow 0.$\\
 Figure \ref{fig:ints} shows the two integrands in equation \ref{eq:ints}. 
 \begin{figure}[h!]
 	\centering
+	\captionsetup{width=.6\linewidth}
 	\includegraphics[width=0.6\textwidth]{graphics/ints_noTitle.pdf}
-	\caption{A picture of a gull.}
+	\caption{Integrand 1 (solid) and 2 (dashed) from equation \ref{eq:ints}. I use the same three settings as in figure \ref{fig:fx}. Notice the instability of the integrands at the boundaries and the linear behaviour in the center region. This is an advantage for the adaptive Simpson's rule which can split up the interval more efficiently than a integration method using equal subintervals. }
 	\label{fig:ints}
 \end{figure}
-To solve the integrals I considered two integration techniques, the adaptive Simpson's rule and the rectangle method. The adaptive Simpson's rule repeatedly splits an integral $I = \int_a^b g(x) dx$ in two subintervalls $ I_l = \int_a^{\frac{b-a}{2}} g(x) dx$ and $I_r = \int_{\frac{b-a}{2}}^b g(x) dx$ until the criteria $|I-I_l-I_r| \leq \epsilon$ is met, whereas the integrals are numerically approximated according to the standard Simpson's rule. The rectangle method divides the interval (a,b) into $N$ equal subintervals of length $h=\frac{b-a}{N}$ and approximates the integral by adding up the areas of the $N$ rectangles under the curve. The rectangle method allows to precompute $F_{\mathbb{S}^{ic}|U=u}(K)$ for all subintervals once and reuse it in all three integrals. On the other hand the adaptive Simpson's rule might use less subintervalls in total but possibly this approach needs to recompute $F_{\mathbb{S}^{ic}|U=u}(K)$ multiple times for the same subintervall. The accuracy and runtime of the two mentioned methods strongly depend on $\epsilon$ and $N$, respectively. A performance analysis based on convergence rate versus computation time shows that the adaptive Simpson's rule is outperforming the rectangle method. Also based on my analysis I set $\epsilon = 10^{-5}$. 
+To solve the integrals I considered two integration techniques, the adaptive Simpson's rule and the rectangle method. The adaptive Simpson's rule repeatedly splits an integral $I = \int_a^b g(x) dx$ in two subintervals $ I_l = \int_a^{\frac{b-a}{2}} g(x) dx$ and $I_r = \int_{\frac{b-a}{2}}^b g(x) dx$ until the criteria $|I-I_l-I_r| \leq \epsilon$ is met, whereas the integrals are numerically approximated according to the standard Simpson's rule. The rectangle method divides the interval (a,b) into $N$ equal subintervals of length $h=\frac{b-a}{N}$ and approximates the integral by adding up the areas of the $N$ rectangles under the curve. The rectangle method allows to precompute $F_{\mathbb{S}^{ic}|U=u}(K)$ for all subintervals once and reuse it in all three integrals. On the other hand the adaptive Simpson's rule might use less subintervals in total but possibly this approach needs to recompute $F_{\mathbb{S}^{ic}|U=u}(K)$ multiple times for the same subintervals. The accuracy and run-time of the two mentioned methods strongly depend on $\epsilon$ and $N$, respectively. A performance analysis based on convergence rate versus computation time shows that the adaptive Simpson's rule is outperforming the rectangle method. Also I conclude that setting $\epsilon = 10^{-5}$ is  a reasonable precision for the adaptive Simpon's rule.
 \subsection{Run-time analysis}
 \label{rt}
-A plot will be enough to demonstrate that the SOB method (blue) is much faster than the HybMMICUB method (red). Figure \ref{fig:rt} shows the run-time for both methods for three different scenarios each. The complexity of the SOB method is $\mathcal{O}(N^3)$ whereas the HybMMICUB method appears to behave linearly. But still the run-time of the SOB method is much shorter for a reasonable amount of underlyings. The experiment is run on a machine with a 1.8 GHz Intel Core i7 processor and 4 GB RAM,
+A plot will be enough to demonstrate that the SOB method (blue) is much faster than the HybMMICUB method (red). Figure \ref{fig:rt} shows the run-time of both methods measured within three different settings. The complexity of the SOB method is $\mathcal{O}(N^3)$ whereas the HybMMICUB method appears to behave linearly. But still the run-time of the SOB method is much shorter for a reasonable amount of underlyings (the SOB method is 1000 times faster for N=10 and 100 times faster for N=512). The experiment is run on a machine with a 1.8 GHz Intel Core i7 processor with 4GB of RAM,
 \begin{figure}[h!]
 	\centering
+	\captionsetup{width=.6\linewidth}
 	\includegraphics[width=0.6\textwidth]{graphics/runtime.pdf}
-	\caption{A picture of a gull.}
+	\caption{Run-time of both pricing methods as a function of underlying assets N. I use three settings to validate the run-time of the methods. The complexity of 		the HybMMICUB method seems to be a linear function of N whereas the SOB method clearly shows its exponential behaviour.}
 	\label{fig:rt}
 \end{figure}
-\newpage
-\section{Results and Future Work}
-\label{sec:results}
-Insert Results and other text.
+
+\subsection{Comparison of accuracy}
+\label{sec:accuracy}
+I now compare the accuracy of the second-order boundary approximation with the hybrid moment matching method associated with the improved comonotonic upper bound. To do that, I approximate the price of the options with Monte Carlo simulations and use it as as a rough comparison benchmark. To simulate the paths of the underlying assets I apply the Euler-Maruyama method. For each asset I generate 1'000'000 paths (respectively 500'000, if N big, which can lead to memory issues) having each path divided in to 1000 time-steps. I price every option five times to estimate the standard deviation of the Monte Carlo approximation. All following experiments run on the ETH Euler Cluster with a 2.4GHz Intel Core 2 Duo processor with 4GB of RAM. \\
+First I replicate two experiments from [1] and from [2] to validate my implementations. Then I present my experiments for which I chose different correlation matrices and different volatility vectors. Some experiments are repeated while increasing the dimension from N=10 to N=50 or varying the volatility. In my last experiment I use a different structure of the spot prices and strikes. Throughout my experiments I set T=1 and r=5\%.
+\captionsetup{skip=0pt}
+\begin {table}
+\caption {Replication of Table 3, Panel B in [1]} 
+\begin{center}
+\begin{tabular}{c|c c c|c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{3}{|c|}{$\sigma$=30\%} & \multicolumn{3}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} \\
+  0 &	20.33894396 & 20.58110878 &  & & &  \\
+  5 & 15.92595404 & 16.11529654 & & &  &  \\
+10 & 12.00439087 & 12.15386256 &  &  &  &  \\
+15 & 8.73255258 & 8.84483358 &  &  &  &  \\
+20 & 6.16426185 & 6.23719001 &  &  &  &  \\
+\hline
+Time [s] & & & & & & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Replication of Table 6 in [2]} 
+\begin{center}
+\begin{tabular}{c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c}{} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.}\\
+  -5 & 2.738	& 1.602	& 1.437    &  0.003\\
+-10 & 4.225	& 2.499	& 2.278    &	0.004\\
+-20 & 8.159	& 5.309	& 4.949    & 0.006\\
+-30 & 12.178	& 9.665	& 9.124& 0.009\\
+-40 & 15.454	& 15.559	& 14.77 & 0.012\\
+-50 & 18.950	& 22.771	& 21.68 & 0.016\\
+-60 & 22.948	& 30.985	& 29.52 & 0.019\\
+\hline
+Time [s] & 0.0151 & 11.869 & 248.59 & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Descending Volatilities, 10 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{N = 10} & \multicolumn{4}{|c}{N=50} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.}\\
+50 &	54.17& 60.52 	& 56.79 & 0.06 & 84.65 & 133.42 & 125.94 & 0.11 \\
+60 & 46.51	& 53.39 	& 49.94 & 0.06   & 79.56  & 128.90 & 121.68 & 0.10  \\
+70 & 39.72	& 46.96	& 43.81 & 0.06  & 74.73 & 124.54 & 117.57 & 0.10\\
+80 & 33.77	& 41.20 	& 38.37 & 0.06  & 70.13  & 120.34 & 113.60 & 0.10  \\
+90 & 28.59& 36.10	& 33.57  & 0.06  & 65.77 & 116.26 & 109.78 &0.10\\
+\hline
+Time [s] & 0.0223 & 38.796 & 902.11 & & 0.0184 & 32.760 & 419.13 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Alternating Correlation Matrix $\Sigma$, 10 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} \\
+50 &	52.46&55.30	&52.56  &0.06  &54.19  &59.25&55.80&0.05  \\
+60 & 	43.09&45.74 	&43.43  &0.05  &46.40  &51.85&48.71&0.05  \\
+70 & 	34.12&36.79 	&34.87  &0.05  &39.42  &45.22&42.38&0.04  \\
+80 & 	25.95&28.73 	&27.20  &0.05  &33.29  &39.33&36.81&0.04  \\
+90 &  18.95&21.82 	&20.63  &0.05  &27.99  &34.16&31.94&0.03  \\
+\hline
+Time [s] & 0.0222&30.853 &845.19 & &0.0206  &40.376& 845.67& \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Alternating Correlation Matrix $\Sigma$, 50 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC} & \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.}\\
+50 &	57.86&80.52 	& 76.37  & 0.02 & 73.95  &126.07 &118.99 &0.17 \\
+60 & 	50.46& 74.36& 70.53 & 0.02&67.11 &121.22 & 114.42&0.17 \\
+70 & 43.60& 68.55& 65.03& 0.02& 60.38&116.56&110.03&0.17\\
+80 & 	37.33& 63.08& 59.85& 0.02&53.85&112.08&105.82&0.16 \\
+90 & 31.67& 57.95& 54.10& 0.02&47.56&107.78&101.78&0.12\\
+\hline
+Time [s]&0.0232 &40.930 & 569.28 & &0.0176 &32.5937 & 528.71 & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Descending Correlation Matrix $\Sigma$, 10 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC} & \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} \\
+50 &	52.47	&	55.53	&	52.75	& 0.01	&	54.33	&	61.28	&	57.56 &	0.02 \\
+60 & 	43.10	& 	46.21	& 	43.83 	& 0.01  &46.33 & 54.14 & 50.70& 0.02 \\
+70 & 34.05 	& 37.51&35.52& 0.01& 39.06&47.68& 44.53 &0.03 \\
+80 & 	25.68	&  29.69&28.07&0.01& 32.57& 41.87&39.07&0.03 \\
+90 & 18.38 	& 22.93& 21.66 &0.01 & 26.91 &36.70 & 34.16 & 0.03 \\
+\hline
+Time [s] &0.0205 & 26.590 & 905.52 & &0.0200 &34.706& 897.07 & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Descending Correlation Matrix $\Sigma$, 50 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c  c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC}& \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC}& \textbf{S.E.} \\
+50 &73.95&126.07&118.99&0.17& 92.38 &  150.20&141.99 &0.16  \\
+60 &67.11&121.22&114.42&0.17& 87.20&  145.67&137.71 &0.17\\
+70 &60.38&116.56&110.03&0.17& 82.27& 141.27 & 133.56 &0.17\\
+80 &53.85&112.08&105.82& 0.16& 77.57& 137.01& 129.53 &0.17\\
+90 &47.60&107.78&101.78& 0.16& 73.11&  132.87& 125.63 &0.17\\
+\hline
+Time [s] &0.0176 &32.59 &528.72 & &0.0172 &27.478&488.82 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin {table}
+\caption {Descending Spot Prices, 10 Assets} 
+\begin{center}
+\begin{tabular}{c|c c c c|c c c c}
+\hline
+\multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
+\hline
+  \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC}& \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} \\
+50 &40.96&43.81&41.69& 0.05& 56.10& 62.85&59.67 & 0.11\\
+60 &28.46&30.61& 29.12& 0.05&46.18& 52.39&49.73&0.10\\
+70 &19.06&20.43& 19.43& 0.04& 38.16&43.51&41.30&0.10\\
+80 &12.45&13.08& 12.44& 0.03 & 31.79&36.05& 34.22& 0.09 \\
+90 &7.98& 8.08&7.69 & 0.03& 26.72&29.82&28.31&0.09\\
+\hline
+Time [s]& 0.0190&34.446& 796.64 & & 0.0209& 49.270&815.59 & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \newpage
 \begin{thebibliography}{1}
@@ -426,10 +592,23 @@ S.J. Deng, M. Li, J. Zhou.
 \textit{Multi-asset Spread Option Pricing and Hedging.}
 October 29, 2007. School of Industrial and Systems Engineering, Georgia Institute of Technology, Atlanta.
 
-\bibitem{sob} 
+\bibitem{hybmmicub} 
 G. Deelstra, A. Petkovic, M. Vanmaele.
 \textit{Pricing and Hedging Asian Basket Spread Options.}
 2010. Journal of Computational and Applied Mathematics 233 2814-2830.
+
+\bibitem{sob2} 
+S.J. Deng, M. Li,  J. Zhou. 
+\textit{Closed-form approximations for spread option prices and Greeks.} 2006.
+Available at http://ssrn.com/abstract=952747.
+
+\bibitem{cd} 
+Carmona, R., V. Durrleman. 
+\textit{Generalizing the Black-Scholes formula to multivariate contigent claims.} 2005. Journal of Computational Finance, 9, 42-63.
+
+\bibitem{pearson}
+Pearson, N. 
+\textit{An efficient approach for pricing spread options.} 1995. Journal of Derivatives, Fall, 76-91.
 
 \end{thebibliography}
 

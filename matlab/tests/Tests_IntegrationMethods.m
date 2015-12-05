@@ -16,7 +16,7 @@ T = 1;
 [e_2,a_2,S0_2,sigma_2,rho_2] = generateMarketParams(100,1,'charged','descending',0.4,'constant',0.3);
 
 %% Test epsilon
-M=6;
+M=7;
 epsilon = 10.^-(1:M);
 V10 = zeros(1,M);
 V11 = zeros(1,M);
@@ -45,7 +45,7 @@ semilogx(epsilon,V10,epsilon,V11,epsilon,V12)
 title('Testing influence of epsilon in HybMMICUB Method: V10, V11 and V12')
 
 %% Test nIntervalls
-M=4;
+M=6;
 N = 10.^(1:M);
 V20 = zeros(1,M);
 V21 = zeros(1,M);
