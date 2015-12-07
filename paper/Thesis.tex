@@ -122,7 +122,7 @@ In section three I start with a short statement about the numerical experiments 
 \newpage
 \section{Approximation methods}
 \label{sec:am}
-In the next subsection (\ref{sec:ms}) I show the assumptions on which both the second-order boundary method and the HybMMICUB method are based on. In teh following two subsections I formally present both approximation methods. These subsections closely follow the works of S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}.
+In the next subsection (\ref{sec:ms}) I show the assumptions on which both the second-order boundary method and the HybMMICUB method are based on. In the following two subsections I formally present both approximation methods. These subsections closely follow the works of S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}.
 
 \subsection{Model setup}
 \label{sec:ms}
@@ -148,7 +148,7 @@ Because the weights $w_i$ can be incorporated in the asset price by taking $S_i(
 
 \subsection{Second-order Boundary Method}
 \label{sec:sob}
-The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou \cite{sob2} and it was extended in 2007 to the multi-asset case \cite{sob}. Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in \cite{sob}. Their work is a valuable contribution because numerous methods have been existing for spread options involving only two underlyings. In \cite{sob} Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) \cite{cd} which also approximates the value of a multi-asset spread option. In \cite{sob} they conclude that the SOB method is the most accurate and also the fastest. The computational edge of the SOB method lies in its closed form solution which involves solely arithmetic calculations.\\
+The second-order boundary method for two-asset spread options (SOB) has been introduced in 2006 by Deng, Li and Zhou \cite{sob2} and it was extended in 2007 to the multi-asset case \cite{sob}. Beside the SOB method Deng, Li and Zhou also introduced the extended Kirk approximation in \cite{sob}. Their work is a valuable contribution because numerous methods have been existing for spread options involving only two underlyings. In \cite{sob} Deng, Li and Zhou compare their two methods with a pricing method from Carmona and Durrleman (2005) \cite{cd} which also approximates the value of a multi-asset spread option. In \cite{sob} they conclude that the SOB method is the most accurate and also the fastest. The computational edge of the SOB method lies in its closed form solution involving solely arithmetic calculations.\\
 The SOB method approximates the price of a spread option with payoff
 \begin{equation}
 \label{eq:sobpo}
@@ -400,12 +400,12 @@ In the presentation of the HybMMICUP method I also omitted the weights of the as
 \section{Numerical Analysis}
 \label{sec:na}
 This section enlightens the computational bottlenecks, such as complexity and instabilities, of both the SOB and the HybMMICUB method. The analysis is based on my MATLAB implementations \emph{priceBasketSpreadOptionSOB.m} and \emph{priceBasketSpreadOptionHybMMICUB.m}.\\
-I test my implementations within different settings, meaning I create artificial compositions of spot prices $S_k(0)$, variance vectors $\sigma$ and correlation matrices $\Sigma$. I use spot price vectors either of type \emph{charged} $S_c$ or of type \emph{descending} $S_d$ which I define as follows: 
+I test my implementations within different settings, meaning I create artificial compositions of spot prices $S_k(0)$, variance vectors $\sigma$ and correlation matrices $\Sigma$. I use spot price vectors either of type \emph{charged} $S_c$ or of type \emph{descending} $S_d$ defined as follows: 
 $$S_{c}(0) = [10(N+1), 10, ..., 10],\quad S_{d}(0) = [10N, 10(N-1), ..., 10].$$  
 The volatility vector is either of type \emph{constant} $\sigma_c$, meaning $\sigma_k = \sigma^*,\;k=0,1,...,N,$ or of  type \emph{descending} $\sigma_d$, meaning that all volatilities are evenly spaced between $\sigma^*$ and 0.1, with $\sigma_0 = \sigma^*$ and $\sigma_N = 0.1$.
 Moreover I use three different correlation matrices, one of \emph{constant} type
 $$\Sigma_{c} =\begin{pmatrix}1 & \rho & \cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots & \vdots & \ddots & \vdots \\ \rho & \rho & \cdots & \rho \end{pmatrix}  ,$$
-one of \emph{alternating} type $\Sigma_{a},$ having all non-diagonal elements $\Sigma_{i\neq j} = \pm \rho$ with alternating signs in between cross-diagonals. And a \emph{descending} correlation matrix which I define as follows:
+one of \emph{alternating} type $\Sigma_{a},$ having all non-diagonal elements $\Sigma_{i\neq j} = \pm \rho$ with alternating signs in between cross-diagonals. And a \emph{descending} correlation matrix given by
 $$\Sigma_{d} = \begin{pmatrix}1 & \frac{1}{3} & \cdots & \frac{1}{N+1} \\ \frac{1}{3} & 1 & \cdots & \frac{1}{N+2} \\ \vdots & \vdots & \ddots & \vdots \\ \frac{1}{N+1} & \frac{1}{N+2} & \cdots & \frac{1}{2N} \end{pmatrix},$$
 (the non-diagonal elements are set  $\Sigma_{i\neq j} = \frac{1}{i+j}$).
 Additionally I vary the number of assets N as well as the fraction of positively weighted assets in the spread. I set the strike price K=10, interest rate  r=5\% and maturity T=1. 
@@ -483,7 +483,7 @@ The 5 assets positively accounted in the spread have spot prices [100, 90, ..., 
 \newpage
 \section{Conclusion}
 \label{sec:conclusion}
-I started by presenting both the second-order boundary method and the hybrid moment matching method associated to the improved comonotonic upper bound. Based on the derivation of the methods it is clear that the SOB method is more straightforward to implement than HybMMICUB. Solely involving arithmetic operations, the SOB method is up to 1000 times faster than the latter. Consider that the SOB method allows further optimization if pricing options including the same assets but varying strike prices: computational costly operations such as calculating the square of a matrix or the few matrix-matrix multiplications involved are independent of K could be prestored and reused.\\
+I started my work by presenting both the second-order boundary method and the hybrid moment matching method associated to the improved comonotonic upper bound. Based on the derivation of the methods it is clear that the SOB method is more straightforward to implement than HybMMICUB. Solely involving arithmetic operations, the SOB method is up to 1000 times faster than the latter. Consider that the SOB method allows further optimization if pricing options including the same assets but varying strike prices: computational costly operations such as calculating the square of a matrix or the few matrix-matrix multiplications involved are independent of K could be prestored and reused.\\
 Both methods can be very accurate (taking into account the results from \cite{sob} and \cite{hybmmicub}) if applied on spread options with strictly one positively weighted asset, whereas the SOB method is slightly more accurate (table 1).  But while extending the experiments to basket-spread options including more positively weighted assets it becomes clear that the SOB method is not anymore applicable if the total number of assets increases to N = 50 (relative error >20\%). Looking at spread options involving N=10 assets one can see that the accuracy of the SOB method correlates with the strike price. If the strike price is low (at time zero the option is close to at-the-money) the SOB approximation outperforms the HybMMICUB, but for out-of-the-money options the HybMMICUB approximation yields more accurate results. I conclude that the HybMMICUB method is more stable in terms of the spread characteristics and market conditions such as correlations and volatilities. Also note that the HybMMCUB overpriced all options in my experiments and it truly is an upper bound which is an asset in estimating basket-spread options.
 
 \newpage
@@ -520,6 +520,7 @@ Pearson, N.
 
 \newpage
 \section*{Appendix: Numerical Results}
+\addcontentsline{toc}{section}{\protect\numberline{}Appendix: Numerical Results}%
 \label{sec:appendix}
 
 \captionsetup{skip=0pt}
@@ -700,7 +701,6 @@ Time [s]& 0.0190&34.446& 796.64 & & 0.0209& 49.270&815.59 & \\
 \caption*{5 assets with positive sign, N=10 assets, $S_k(0)=10(N+1-k), \sigma_k = 0.3 (\sigma_k = 0.6), \rho_{i\neq j} = 0.4, T = 1, r=0.05.$}
 \end{center}
 \end{table}
-
 \end{document}
 
 
