@@ -1,5 +1,6 @@
 %% Basekt Spread Option Pricing
 %% Replicating Pricing and hedging Asian basket spread options
+%% byG. Deelstra, A. Petkovic, M. Vanmaele. (2009)
 %% Table6
 
 % Author: Daniel Waelchli
@@ -34,20 +35,19 @@ S04=[100,60,40,30];
 sigma4=[0.16,0.23,0.32,0.43];
 rho4=[1,0.42,0.5,0.3;0.42,1,0.24,0.42;0.5,0.24,1,0.35;0.3,0.42,0.35,1];
 
-%Pricing
+%% Pricing
 Vsob4 = zeros(1,nK);
 tsob4 = zeros(1,nK);
 VhybMMICUB4 = zeros(1,nK);
 thybMMICUB4 = zeros(1,nK);
 
-VhybMMICUB24 = zeros(1,nK);
-thybMMICUB24 = zeros(1,nK);
-
+% SOB & HybMMICUB
 for i = 1:nK
     [Vsob4(i),tsob4(i)] = priceBasketSpreadOptionSOB(K(i),r,T,e4,a4,S04,sigma4,rho4);
     [VhybMMICUB4(i),thybMMICUB4(i)] = priceBasketSpreadOptionHybMMICUB(K(i),r,T,e4,a4,S04,sigma4,rho4,eps);
 end
 
+% Monte Carlo
 [Vmc4_1,tmc_1] = priceBasketSpreadOptionMonteCarlo(K,r,T,e4,a4,S04,sigma4,rho4,nPaths,nSteps,M);
 [Vmc4_2,tmc_2] = priceBasketSpreadOptionMonteCarlo(K,r,T,e4,a4,S04,sigma4,rho4,nPaths,nSteps,M);
 [Vmc4_3,tmc_3] = priceBasketSpreadOptionMonteCarlo(K,r,T,e4,a4,S04,sigma4,rho4,nPaths,nSteps,M);
