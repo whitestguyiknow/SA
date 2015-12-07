@@ -12,11 +12,13 @@
 \usepackage[nottoc]{tocbibind}
 \usepackage{amssymb}
 \usepackage{caption}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf}
 \usepackage{float}
 \usepackage{bbm}
 \usepackage{theoremref}
 \usepackage{setspace}
-
+\captionsetup[figure]{labelfont=bf}
 %% Theorems
 \newtheorem{prop}{Proposition}
 \newtheorem*{remark}{Remark}
@@ -110,8 +112,7 @@ analytical representation for the price (even not in the simplest framework
 where the asset prices are driven by  correlated geometric Brownian motions). Numerical approaches such 
 as Monte Carlo simulations or PDE methods become very slow and hence inpracticable as the number of underlyings increases. 
 Therefore I closely look at two different basket-spread option pricing methods which have been 
-introduced by S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}. According to the authors both the second-order
-boundary approximation method [1,Chap.3,Prop.5] and the hybrid moment matching method associated to the improved comonotonic upper bound (HybMMICUB)
+introduced by S.Deng, M.Li, and J.Zhou \cite{sob} and by G.Deelstra, A.Petkovic and M.Vanmaele \cite{hybmmicub}. According to the authors both the second-order boundary approximation method [1,Chap.3,Prop.5] and the hybrid moment matching method associated to the improved comonotonic upper bound (HybMMICUB)
 [2,Chap.3,Prop.5] are considered to be extremely fast and accurate. Therefore I implement both methods in MATLAB
 and compare their numerical performances as a function of the basket-spread characteristics. 
 As a comparison benchmark I estimate the true prices with Monte Carlo simulations also implemented in MATLAB.\\
@@ -449,7 +450,7 @@ A plot will be enough to demonstrate that the SOB method (blue) is much faster t
 
 \subsection{Comparison of accuracy}
 \label{sec:accuracy}
-I now compare the accuracy of the second-order boundary approximation with the hybrid moment matching method associated to the improved comonotonic upper bound. To do that, I approximate the price of the options with Monte Carlo simulations and use it as as a rough comparison benchmark. To simulate the paths of the underlying assets I apply the Euler-Maruyama method. For each asset I generate 1'000'000 paths (respectively 500'000, if N big, which can lead to memory issues) having each path divided in to 1000 (100, respectively) time-steps. I price every option five times to estimate the standard deviation of the Monte Carlo approximation. All following experiments run on the ETH Euler Cluster with a 2.4GHz Intel Core 2 Duo processor with 4GB of RAM. \\
+I now compare the accuracy of the second-order boundary approximation with the hybrid moment matching method associated to the improved comonotonic upper bound. To do that, I approximate the price of the options with Monte Carlo simulations and use it as as a rough comparison benchmark. To simulate the paths of the underlying assets I apply the Euler-Maruyama method. For each asset I generate 1'000'000 paths (respectively 500'000, if N big, which can lead to memory issues) having each path divided into 1000 (100, respectively) time-steps. I price every option five times to estimate the standard deviation of the Monte Carlo approximation. All following experiments run on the ETH Euler Cluster with a 2.4GHz Intel Core 2 Duo processor with 4GB of RAM. \\
 First I replicate two experiments from [1] and from [2] to validate my implementations. Then I present my experiments for which I choose different correlation matrices and different volatility vectors. Some experiments are repeated while increasing the dimension from N=10 to N=50 or varying the volatility. In my last experiment I use a different structure of the spot prices and strikes. Throughout my experiments I set T=1 and r=5\%.\\
 
 {\setstretch{1.5}
@@ -459,14 +460,31 @@ In the first example I replicate the experiment from table 1 in \cite{sob}: I pr
 $$\Sigma =\begin{pmatrix}1 & 0.2 & 0.8\\ 
 0.2 & 1 & 0.4\\
 0.8 & 0.4 & 1 \end{pmatrix}.$$
-Also I vary K from 30 to 50 with increment 5 and I set T =0.25 and r=5\%. The signs and the weights are equal $[1,-1,-1]$. From a comparison between my prices and the results from S.J. Deng, M. Li, J. Zhou I imply that I correctly implemented the SOB method although there are relative changes of order $1.5\times10^{-4}$. Looking at the prices calculatd with the HybMMICUB method one can see that the SOB method is more accurate in this experiment. Taking my Monte Carlo estimate as a reference, in the HybMMICUB approximations occur relative errors up to $1.6 \times 10^{-2}$ wherase I have a maximal relative errors of $2.7\times10{-3}$ occuring in the SOB apprixmations for K=50 and $\sigma = 60\%$. Again one can see that the SOB method is the fastest.\\
-In table 2 I'm replicating the results from table 6 in \cite{hybmmicub}. It's noticeable that the SOB method completely misprices the spread options. That is a result one could expect if you remember the condition $K\geq0$ from proposition \ref{prop:price} and you consider that all strike prices in this experiment are\ negative. My prices slightly deviate from the results from G. Deelsra, A. Petkovic and M.Vanmaele. There are maximal relative changes of order $5\times10^{-2}$. Such changes can happen because there is much freedom in the implementation, namely the choice of integration scheme, how you cope with the boundaries of the integrals and how the zero finding problem is solved. The relative errors range from $5\times10^{-2}$ (K=-60) to $11\times10^-{2}$ (K=-5).\\
+Also I vary K from 30 to 50 with increment 5 and I set T =0.25 and r=5\%. The signs and the weights are equal $[1,-1,-1]$. From a comparison between my prices and the results from S.J. Deng, M. Li, J. Zhou I imply that I correctly implemented the SOB method although there are relative changes of order $1.5\times10^{-4}$. Looking at the prices calculated with the HybMMICUB method one can see that the SOB method is more accurate in this experiment. Taking my Monte Carlo estimate as a reference, in the HybMMICUB approximations occur relative errors up to $1.6 \times 10^{-2}$ whereas I have a maximal relative errors of $2.7\times10{-3}$ occuriing in the SOB approximations for K=50 and $\sigma = 60\%$. Again one can see that the SOB method is the fastest.\\
+In table 2 I'm replicating the results from table 6 in \cite{hybmmicub}. It's noticeable that the SOB method completely mispriced the spread options. That is a result one could expect if you remember the condition $K\geq0$ from proposition \ref{prop:price} and you consider that all strike prices in this experiment are\ negative. My prices slightly deviate from the results from G. Deelsra, A. Petkovic and M.Vanmaele. There are maximal relative changes of order $5\times10^{-2}$. Such changes can happen because there is much freedom in the implementation, namely the choice of integration scheme, how you cope with the boundaries of the integrals and how the zero finding problem is solved. The relative errors range from $5\times10^{-2}$ (K=-60) to $11\times10^-{2}$ (K=-5).\\
 In paper \cite{sob} and \cite{hybmmicub} the authors test their approximation methods solely on spread options with strictly one asset positively accounted in the spread. In my experiments I strictly use five assets with a positive sign while varying the number of assets between N=10 to N=50.\\
 
+\newpage
 {\setstretch{1.5}
 \textbf{Setting: Descending Volatilities (Table 3)}\\
 }
-Here I am using a different vlatility for each asset. 
+In this experiment I am applying a different volatility to each asset. For N = 10 the HybMMICUB method constantly produces relative pricing errors  $7\times10^{-2}$ whereby the SOB errors range from $5\times10^{-2}$ (K=50)  to $15\times10^{-2}$ (K=90). Also in other experiments one will see that errors of the SOB approximations continuously increase as the strike price K increases. For N=50 the SOB method completely mispriced the basket-spread options. Surprisingly the relative errors of the HybMMICUB method reduce for the case N=50. \\
+
+{\setstretch{1.5}
+\textbf{Setting: Alternating Correlation Matrix (Tables 4 \& 5) and Descending Correlation Matrix (Tables 6 \& 7)}\\
+}
+Here one can recognize that in both settings with N=50 the SOB method produces poor approximations. The HybMMICUB delivers reasonable prices with relative errors of the order $5\times10^{-2}$. The accuracy of the approximations is slightly reduced in the case of $\sigma=60\%.$\\
+
+{\setstretch{1.5}
+\textbf{Setting: Descending Spot Prices (Table 8)}\\
+}
+The 5 assets positively accounted in the spread have spot prices [100, 90, ..., 60] and the other 5 spot prices are given by the vector [50, ..., 10]. The strike prices vary from 100 to 180 with increment 20. Meaning that at time zero the option is definitely in the money. In the table one can observe that for $\sigma = 30\%$ the SOB method delivers accurate results whereas the approximations of the HybMMICUB method are favorable in the case of $\sigma = 60\%.$
+
+\newpage
+\section{Conclusion}
+\label{sec:conclusion}
+I started by presenting both the second-order boundary method and the hybrid moment matching method associated to the improved comonotonic upper bound. Based on the derivation of the methods it is clear that the SOB method is more straightforward to implement than HybMMICUB. Solely involving arithmetic operations, the SOB method is up to 1000 times faster than the latter. Consider that the SOB method allows further optimization if pricing options including the same assets but varying strike prices: computational costly operations such as calculating the square of a matrix or the few matrix-matrix multiplications involved are independent of K could be prestored and reused.\\
+Both methods can be very accurate (taking into account the results from \cite{sob} and \cite{hybmmicub}) if applied on spread options with strictly one positively weighted asset, whereas the SOB method is slightly more accurate (table 1).  But while extending the experiments to basket-spread options including more positively weighted assets it becomes clear that the SOB method is not anymore applicable if the total number of assets increases to N = 50 (relative error >20\%). Looking at spread options involving N=10 assets one can see that the accuracy of the SOB method correlates with the strike price. If the strike price is low (at time zero the option is close to at-the-money) the SOB approximation outperforms the HybMMICUB, but for out-of-the-money options the HybMMICUB approximation yields more accurate results. I conclude that the HybMMICUB method is more stable in terms of the spread characteristics and market conditions such as correlations and volatilities. Also note that the HybMMCUB overpriced all options in my experiments and it truly is an upper bound which is an asset in estimating basket-spread options.
 
 \newpage
 \begin{thebibliography}{1}
@@ -501,7 +519,7 @@ Pearson, N.
 \end{thebibliography}
 
 \newpage
-\section{Appendix: Numerical Results}
+\section*{Appendix: Numerical Results}
 \label{sec:appendix}
 
 \captionsetup{skip=0pt}
@@ -669,18 +687,17 @@ Time [s] &0.0176 &32.59 &528.72 & &0.0172 &27.478&488.82 \\
 \multicolumn{1}{c|}{} & \multicolumn{4}{|c|}{$\sigma$=30\%} & \multicolumn{4}{|c}{$\sigma$=60\%} \\ 
 \hline
   \textbf{K} & \textbf{SOB} & \textbf{Hyb}	& \textbf{MC}& \textbf{S.E.} & \textbf{SOB} & \textbf{Hyb} & \textbf{MC} & \textbf{S.E.} \\
-50 &40.96&43.81&41.69& 0.05& 56.10& 62.85&59.67 & 0.11\\
-60 &28.46&30.61& 29.12& 0.05&46.18& 52.39&49.73&0.10\\
-70 &19.06&20.43& 19.43& 0.04& 38.16&43.51&41.30&0.10\\
-80 &12.45&13.08& 12.44& 0.03 & 31.79&36.05& 34.22& 0.09 \\
-90 &7.98& 8.08&7.69 & 0.03& 26.72&29.82&28.31&0.09\\
-
+100 &40.96&43.81&41.69& 0.05& 56.10& 62.85&59.67 & 0.11\\
+120 &28.46&30.61& 29.12& 0.05&46.18& 52.39&49.73&0.10\\
+140 &19.06&20.43& 19.43& 0.04& 38.16&43.51&41.30&0.10\\
+160 &12.45&13.08& 12.44& 0.03 & 31.79&36.05& 34.22& 0.09 \\
+180 &7.98& 8.08&7.69 & 0.03& 26.72&29.82&28.31&0.09\\
 \hline
 Time [s]& 0.0190&34.446& 796.64 & & 0.0209& 49.270&815.59 & \\
 \hline
 \end{tabular}
 \\[8pt]
-\caption*{5 assets with positive sign, $S_k(0)=10k, \sigma_k = 0.3 (\sigma_k = 0.6), \rho_{i\neq j} = 0.4, T = 1, r=0.05.$}
+\caption*{5 assets with positive sign, N=10 assets, $S_k(0)=10(N+1-k), \sigma_k = 0.3 (\sigma_k = 0.6), \rho_{i\neq j} = 0.4, T = 1, r=0.05.$}
 \end{center}
 \end{table}
 
